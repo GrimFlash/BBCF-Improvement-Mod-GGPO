@@ -6,7 +6,7 @@ The goal is to extend the game with community-created content, provide additiona
 Join the [BB Improvement Mod Discord Server](https://discord.gg/j2mCX9s) to discuss about the development and the game itself!
 
 ## Info
-Due to lack of time and motivation to continue working on BBCF Improvement Mod, I am releasing the source code in hopes of someone improving upon it, and continuing its development.
+Due to lack of time and motivation to continue working on BBCF Improvement Mod, I am releasing the source code in hopes of others improving upon it, and continuing its development.
 
 Right now the quality of the codebase is in a really poor state that needs a lot of rework both structurally and logically, most of which has been done and improved in BBTAG Improvement Mod.
 
