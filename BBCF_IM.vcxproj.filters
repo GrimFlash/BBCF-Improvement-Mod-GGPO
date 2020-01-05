@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{61c84107-6b51-4060-a4db-5e2a0d561d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{878e1651-7325-455c-bf8f-ddf54cb167ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\D3D9EXWrapper">
+      <UniqueIdentifier>{47bc1dd4-af74-4984-9738-82b0f64b4185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\SteamApiWrapper">
+      <UniqueIdentifier>{50817bf9-cade-4b23-833c-a007583b3029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\D3D9ExWrapper">
+      <UniqueIdentifier>{c2416cd4-c017-4b4c-8bec-93704f174ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\SteamApiWrapper">
+      <UniqueIdentifier>{4f9c754a-38eb-4566-adeb-809e2bc217b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="export">
+      <UniqueIdentifier>{ed19ccf9-8a20-4df1-b194-47a4a16166f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{f5201038-a6d3-432c-ac40-8613426749c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\ImGui">
+      <UniqueIdentifier>{672f7b61-63c2-4d06-8826-fdb75b5f3d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGui">
+      <UniqueIdentifier>{6efb0560-dbe6-4ba8-b579-e08645068bf5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SteamApiWrapper\SteamMatchmakingWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SteamApiWrapper\SteamNetworkingWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D9EXWrapper\D3DXMath.cpp">
+      <Filter>src\D3D9EXWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D9EXWrapper\ID3D9EXWrapper.cpp">
+      <Filter>src\D3D9EXWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D9EXWrapper\ID3D9EXWrapper_Device.cpp">
+      <Filter>src\D3D9EXWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D9EXWrapper\ID3D9Wrapper_Sprite.cpp">
+      <Filter>src\D3D9EXWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D9EXWrapper\ID3DXWrapper_Effect.cpp">
+      <Filter>src\D3D9EXWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\additional_hooks.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dll_main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\ImGuiSystem.cpp">
+      <Filter>src\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\network_manager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hook_manager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bbcf_im.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\update_check.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\custom_palette.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SteamApiWrapper\SteamFriendsWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SteamApiWrapper\SteamUserStatsWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SteamApiWrapper\SteamUserWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SteamApiWrapper\SteamUtilsWrapper.cpp">
+      <Filter>src\SteamApiWrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\containers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\steamapi_helper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\internal_palette_datas.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\custom_gamemodes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bbcf_im_networking.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crashdump.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\fonts.cpp">
+      <Filter>src\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="depends\imgui\imgui.cpp" />
+    <ClCompile Include="depends\imgui\imgui_demo.cpp" />
+    <ClCompile Include="depends\imgui\imgui_draw.cpp" />
+    <ClCompile Include="depends\imgui\imgui_impl_dx9.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\SteamApiWrapper\SteamMatchmakingWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteamApiWrapper\SteamNetworkingWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3D9EXWrapper\D3DXMath.h">
+      <Filter>include\D3D9ExWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3D9EXWrapper\ID3D9EXWrapper.h">
+      <Filter>include\D3D9ExWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3D9EXWrapper\ID3D9EXWrapper_Device.h">
+      <Filter>include\D3D9ExWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3D9EXWrapper\ID3D9Wrapper_Sprite.h">
+      <Filter>include\D3D9ExWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D3D9EXWrapper\ID3DXWrapper_Effect.h">
+      <Filter>include\D3D9ExWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\additional_hooks.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\settings.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_palette.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ImGui\ImGuiSystem.h">
+      <Filter>include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\network_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hook_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bbcf_im.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\update_check.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteamApiWrapper\SteamFriendsWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteamApiWrapper\SteamUserStatsWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteamApiWrapper\SteamUserWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteamApiWrapper\SteamUtilsWrapper.h">
+      <Filter>include\SteamApiWrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\containers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\steamapi_helper.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\internal_palette_datas.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\custom_gamemodes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cchar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gamestates_defines.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bbcf_im_networking.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\crashdump.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ImGui\fonts.h">
+      <Filter>include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="depends\imgui\imgui.h" />
+    <ClInclude Include="depends\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="depends\imgui\imgui_internal.h" />
+    <ClInclude Include="depends\imgui\stb_rect_pack.h" />
+    <ClInclude Include="depends\imgui\stb_textedit.h" />
+    <ClInclude Include="depends\imgui\stb_truetype.h" />
+    <ClInclude Include="depends\imgui\imconfig.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="export\dinput8.def">
+      <Filter>export</Filter>
+    </None>
+    <None Include="resource\settings.ini">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+</Project>
