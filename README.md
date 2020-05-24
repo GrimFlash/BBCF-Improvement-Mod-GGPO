@@ -36,7 +36,7 @@ Authors
 
 ## License
 This project is licensed under the MIT License -
-see the (gonna update this soon) file for details.
+see the LICENSE.md file for details.
 
 ## External Licenses and Copyright Information
 
