@@ -24,7 +24,7 @@ Contributions of all kinds are welcome!
 We're cuurently seeking help with C++ development, x86 assembly, reverse engineering, and networking code, but non-technical skills such as 
 
 * Reading CONTRIBUTE.md and submittting new pull requests
-* Updating and organizing the
+* Updating and organizing the [wiki](https://github.com/GrimFlash/BBCF-Improvment-Mod-GGPO/wiki)
 * Testing early-access reases and reporting issues on the issue tracker
 * Spreading the word and recruiting new players and contributors!
 
