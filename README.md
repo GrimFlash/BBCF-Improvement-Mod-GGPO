@@ -9,7 +9,7 @@ A netplay implementation utilizing kovidomi's BBCF Improvment mod for use with t
 * [External Licenses and Copyright Information](#external-licenses-and-copyright-information)
 
 ## Compiling and usage
-BBCF Improvement Mod GGPO is coded using Visual Studio 2017 (toolset v141). <br>
+BBCF Improvement Mod GGPO is coded using Visual Studio 2019. <br>
 To compile, you should only need to load the sln file and compile as-is. No changes should be needed to the solution or source.<br>
 Copy the compiled binary, settings.ini, and palettes.ini file from the bin/ folder into the game's root folder.
 
