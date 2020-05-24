@@ -14,7 +14,7 @@ To compile, you should only need to load the sln file and compile as-is. No chan
 Copy the compiled binary, settings.ini, and palettes.ini file from the bin/ folder into the game's root folder.
 
 ## Requirements:
-- Visual Studio 2017 (toolset v141) (Windows SDK 10.0.17763.0)
+- Visual Studio 2019
 - Detours 1.5
 - DirectX SDK
 - Steamworks SDK (v1.42)
