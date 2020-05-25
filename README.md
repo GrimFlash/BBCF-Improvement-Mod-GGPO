@@ -59,7 +59,7 @@ Authors
 
 ## License
 This project is licensed under the MIT License -
-see the LICENSE.md file for details.
+see the [LICENSE](https://github.com/GrimFlash/BBCF-Improvment-Mod-GGPO/blob/master/LICENSE) file for details.
 
 ## External Licenses and Copyright Information
 
