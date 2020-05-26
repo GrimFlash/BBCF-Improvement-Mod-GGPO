@@ -10,7 +10,7 @@ class ImGuiSystem
 {
 public:
 	static bool Initialized;
-	static bool Init(void *hwnd, IDirect3DDevice9 *device);
+	static bool Init(void* hwnd, IDirect3DDevice9* device);
 	static void Render();
 	static void Shutdown();
 	static void InvalidateDeviceObjects();
@@ -19,20 +19,24 @@ public:
 	static void AddLog(const char* message, ...);
 	static void AddLogSeparator();
 	static void WriteLogToFile();
-	static void SetNotification(const char *text, float timeToShowInSec = 5.0, bool showNotificationWindow = false);
+	static void SetNotification(const char* text, float timeToShowInSec = 5.0, bool showNotificationWindow = false);
 	// start with a type of message: "[system]", "[info]", "[warning]", "[error]", "[fatal]", "[notice]", "[log]"
 	static bool IsUpdateAvailable;
 	static bool DoLogging;
 	static bool DrawHitbox;
 private:
-	static void SetMainWindowTitle(const char *text = 0);
+	static void SetMainWindowTitle(const char* text = 0);
 	static void HandleNotification();
 	static void ShowDebugWindow(bool* p_open);
 	static void ShowCustomPalettesMenu();
+	static void ShowGGPONetplayMenu();
 	static void ShowNotificationWindow();
 	static void ShowLogWindow(bool* p_open);
 	static void ShowUpdateWindow();
 	static void ShowPaletteEditorWindow(bool* p_open);
 	static void ShowGameplaySettingsMenu();
+	static void ShowGgpoHostJoinWindow(bool* p_open);
+	static void ShowGgpoSpectateWindow(bool* p_open);
+	static void ShowSaveLoadStateWindow(bool* p_open);
 	static ImGuiLog Log;
 };

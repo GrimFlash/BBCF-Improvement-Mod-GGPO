@@ -31,10 +31,13 @@ bool show_debug_window = false;
 bool show_palette_editor_window = false;
 bool ImGuiSystem::IsUpdateAvailable = false;
 bool ImGuiSystem::DoLogging = true;
-bool *NO_CLOSE_FLAG = NULL;
+bool* NO_CLOSE_FLAG = NULL;
 bool is_main_window_visible = false;
 bool show_overwrite_popup = false;
 bool ImGuiSystem::DrawHitbox = false;
+bool show_ggpo_host_join_window = false;
+bool show_ggpo_spectate_window = false;
+bool show_save_load_state_window = false;
 
 std::string notificationText;
 float notificationTimer = 0;
@@ -140,10 +143,10 @@ void ImGuiSystem::SetMainWindowTitle(const char *text)
 		main_title = text;
 	else
 	{
-		main_title = "BBCF Improvement Mod ";
+		main_title = "BBCF Improvement Mod + GGPO ";
 		main_title += version_num;
 #ifndef RELEASE_VER
-		main_title += " (DEBUG)";
+		main_title += " (DEBUG) ";
 #endif
 	}
 	main_title += "###MainTitle"; //set unique identifier
@@ -363,6 +366,11 @@ void ImGuiSystem::HandleImGuiWindows()
 			ImGui::Separator();
 		}
 
+		if (ImGui::CollapsingHeader("GGPO Netplay"))
+		{
+			ShowGGPONetplayMenu();
+		}
+
 		if (ImGui::CollapsingHeader("Loaded settings.ini values"))
 		{
 			//not using columns because its buggy with windows having always_autoresize flag, as the window 
@@ -438,10 +446,7 @@ void ImGuiSystem::HandleImGuiWindows()
 		ImGui::SameLine();
 		if (ImGui::Button("GitHub"))
 			ShellExecute(NULL, L"open", L"https://github.com/kovidomi/BBCF-Improvement-Mod", NULL, NULL, SW_SHOWNORMAL);
-		ImGui::SameLine();
-		if (ImGui::Button("Donate"))
-			ShellExecute(NULL, L"open", L"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C8EDR78DJ8PU2", NULL, NULL, SW_SHOWNORMAL);
-
+	
 		ImGui::End();
 	}
 
@@ -455,6 +460,15 @@ void ImGuiSystem::HandleImGuiWindows()
 	if(show_debug_window)
 		ShowDebugWindow(&show_debug_window);
 #endif
+	if (show_ggpo_host_join_window)
+		ShowGgpoHostJoinWindow(&show_ggpo_host_join_window);
+
+	if (show_ggpo_spectate_window)
+		ShowGgpoSpectateWindow(&show_ggpo_spectate_window);
+
+	if (show_save_load_state_window)
+		ShowSaveLoadStateWindow(&show_save_load_state_window);
+
 	if (show_palette_editor_window && show_main_window)
 		ShowPaletteEditorWindow(&show_palette_editor_window);
 
@@ -574,7 +588,44 @@ void ImGuiSystem::ShowDebugWindow(bool* p_open)
 			show_demo_window ^= 1;
 	}
 
+	bool pressed = ImGui::Button("Open Save/Load state window");
+	if (*Containers::gameVals.pGameState != GAME_STATE_IN_MATCH || *Containers::gameVals.pGameMode != GAME_MODE_TRAINING)
+	{
+		ImGui::SameLine();
+		ImGui::TextDisabled("NOT IN TRAINING MODE");
+	}
+	if (pressed)
+		show_save_load_state_window ^= 1;
+
 	ImGui::End();
+}
+
+void ImGuiSystem::ShowSaveLoadStateWindow(bool* p_open)
+{
+	if (*Containers::gameVals.pGameState != GAME_STATE_IN_MATCH || *Containers::gameVals.pGameMode != GAME_MODE_TRAINING)
+		return;
+
+	ImGui::Begin("Save/Load State", p_open);
+
+	static int nFramesToSkipRender = 0;
+
+	if (nFramesToSkipRender < 0) {
+		nFramesToSkipRender = 0;
+	}
+	else if (nFramesToSkipRender > 60) {
+		nFramesToSkipRender = 60;
+	}
+
+	ImGui::InputInt("Num of frames to skip", &nFramesToSkipRender);
+
+	ImGui::Button("Save");
+
+	ImGui::Button("Load");
+
+	ImGui::EndPopup();
+
+	/*This will be the workspace for getting the save/load state functioning,
+	Which in turn proves that game loop and visual loop can be separated*/
 }
 
 void ImGuiSystem::ShowCustomPalettesMenu()
@@ -774,6 +825,66 @@ void ImGuiSystem::ShowCustomPalettesMenu()
 	{
 		ReloadCustomPalettes();
 	}
+}
+
+void ImGuiSystem::ShowGGPONetplayMenu()
+{
+	if (ImGui::Button("Host/Join"))
+	{
+		if (*Containers::gameVals.pGameMode == GAME_MODE_ONLINE || *Containers::gameVals.pGameMode == GAME_STATE_LOBBY)
+		{
+			ImGui::SameLine();
+			ImGui::TextDisabled("CANNOUT USE DURING ONLINE MODES");
+			//Currently doesn't work as intended (message doesn't stay on screen)
+			//will fix later
+		}
+
+		else
+		{
+			show_ggpo_host_join_window ^= 1;
+
+		}
+	}
+
+
+	if (ImGui::Button("Spectate"))
+	{
+		if (*Containers::gameVals.pGameMode == GAME_MODE_ONLINE || *Containers::gameVals.pGameMode == GAME_STATE_LOBBY)
+		{
+			ImGui::SameLine();
+			ImGui::TextDisabled("CANNOUT USE DURING ONLINE MODES");
+			//Currently doesn't work as intended (message doesn't stay on screen)
+			//will fix later
+		}
+		else
+		{
+			show_ggpo_spectate_window ^= 1;
+		}
+	}
+}
+
+void ImGuiSystem::ShowGgpoHostJoinWindow(bool* p_open)
+{
+	if (*Containers::gameVals.pGameMode == GAME_MODE_ONLINE)
+		return;
+
+	ImGui::Begin("Host/Join", p_open);
+
+	ImGui::Text("Example text");
+
+	ImGui::EndPopup();
+}
+
+void ImGuiSystem::ShowGgpoSpectateWindow(bool* p_open)
+{
+	if (*Containers::gameVals.pGameMode == GAME_MODE_ONLINE)
+		return;
+
+	ImGui::Begin("Spectate", p_open);
+
+	ImGui::Text("Example text");
+
+	ImGui::EndPopup();
 }
 
 void ImGuiSystem::SetNotification(const char *text, float timeToShowInSec, bool showNotificationWindow)
