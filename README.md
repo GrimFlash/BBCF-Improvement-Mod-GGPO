@@ -28,14 +28,13 @@ We're cuurently seeking help with C++ development, x86 assembly, reverse enginee
 * Updating and organizing the [wiki](https://github.com/GrimFlash/BBCF-Improvment-Mod-GGPO/wiki)
 * Testing early-access reases and reporting [issues](https://github.com/GrimFlash/BBCF-Improvment-Mod-GGPO/issues/new) on the issue tracker
 * Spreading the word and recruiting new players and contributors!
+* Joining the [Discord](https://discord.gg/MnTR3Qp) and chatting with us
 
 ## Why GGPO? Why BBCF? Why now?
 While lockstep netcode was considered industry standard for many years
-(including triple-A titles like _Street Fighter IV_), its failures have
-been severe and widespread (_Ultimate Marvel vs. Capcom 3_ and _King of
-Fighters XIII_).
+(including titles such as Street Fighter IV), its flaws have become more omnipresent throughout the years.
 
-In the last decade, many prominent fighting-game developers have documented
+In the last decade, numerous fighting-game developers have documented
 the negative player effects that lockstep netcode and its necessary input
 latency create. Instead, developers and community members alike have
 espoused the virtues of rollback-based netcode, including
