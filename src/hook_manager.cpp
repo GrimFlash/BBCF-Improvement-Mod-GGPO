@@ -1,19 +1,30 @@
 #include "../include/hook_manager.h"
+
+#include "../include/logger.h"
+
 #include <Psapi.h>
 
 std::vector<functionhook_t> HookManager::hooks;
 
-JMPBACKADDR HookManager::SetHook(const char *label, const char *pattern, const char *mask, const int len, void *newFunc, bool activate)
+JMPBACKADDR HookManager::SetHook(const char* label, const char* pattern, const char* mask,
+	const int len, void* newFunc, bool activate)
 {
-	//check if there is already a hook registered with same label
-	if (GetHookStructIndex(label) != -1)
+	if (len > MAX_LENGTH)
 	{
-		LOG(2, "%s hook already present!\n", label);
+		LOG(2, "Overwritten bytes more than %d (%d)! \n", MAX_LENGTH, len);
 		return 0;
 	}
 
-	hooks.push_back(functionhook_t());
-	int index = hooks.size() - 1;
+	//check if there is already a hook registered with same label
+	int index = GetHookStructIndex(label);
+	if (index != -1)
+	{
+		LOG(2, "%s hook already present!\n", label);
+		return hooks[index].jmpBackAddr;
+	}
+
+	hooks.push_back(functionhook_t{});
+	index = hooks.size() - 1;
 	hooks[index].label = label;
 	hooks[index].pattern = pattern;
 	hooks[index].mask = mask;
@@ -29,8 +40,8 @@ JMPBACKADDR HookManager::SetHook(const char *label, const char *pattern, const c
 		return 0;
 	}
 
-	LOG(2, "%s found at: 0x%x\n", label, startAddress);
-	
+	LOG(2, "%s found at: 0x%p\n", label, startAddress);
+
 	if (!SaveOriginalBytes(index, (void*)startAddress, len))
 	{
 		LOG(2, "Saving original bytes failed.\n");
@@ -55,7 +66,7 @@ JMPBACKADDR HookManager::SetHook(const char *label, const char *pattern, const c
 }
 
 //sets new hooked address to an existing hook struct
-bool HookManager::SetHook(const char *label, void *newFunc, bool activate)
+bool HookManager::SetHook(const char* label, void* newFunc, bool activate)
 {
 	int index = GetHookStructIndex(label);
 	if (index == -1)
@@ -99,7 +110,7 @@ bool HookManager::SaveOriginalBytes(int index, void* startAddress, int len)
 	return true;
 }
 
-bool HookManager::IsHookActivated(const char *label)
+bool HookManager::IsHookActivated(const char* label)
 {
 	int index = GetHookStructIndex(label);
 	if (index == -1)
@@ -110,9 +121,7 @@ bool HookManager::IsHookActivated(const char *label)
 	return hooks[index].activated;
 }
 
-//0 failed
-//1 success
-bool HookManager::ActivateHook(const char *label)
+bool HookManager::ActivateHook(const char* label)
 {
 	int index = GetHookStructIndex(label);
 	if (index == -1)
@@ -135,9 +144,7 @@ bool HookManager::ActivateHook(const char *label)
 	return true;
 }
 
-//0 failed
-//1 success
-bool HookManager::DeactivateHook(const char *label)
+bool HookManager::DeactivateHook(const char* label)
 {
 	LOG(2, "Deactivating %s hook.\n", label);
 	int index = GetHookStructIndex(label);
@@ -169,17 +176,54 @@ JMPBACKADDR HookManager::GetJmpBackAddr(const char* label)
 	return hooks[index].jmpBackAddr;
 }
 
-//registering a new hook struct without hooking
-JMPBACKADDR HookManager::RegisterAddr(const char *label, const char *pattern, const char *mask, const int len)
+bool HookManager::SetJmpBackAddr(const char* label, DWORD newJmpBackAddr)
 {
-	if (GetHookStructIndex(label) != -1)
+	int index = GetHookStructIndex(label);
+	if (index == -1)
 	{
-		LOG(2, "%s hook already present!\n", label);
+		LOG(2, "SetJmpBackAddr: %s hook not found!\n", label);
+		return false;
+	}
+
+	hooks[index].jmpBackAddr = newJmpBackAddr;
+	hooks[index].startAddress = newJmpBackAddr - hooks[index].length;
+
+	int startAddress = hooks[index].startAddress;
+	int len = hooks[index].length;
+
+	if (!SaveOriginalBytes(index, (void*)startAddress, len))
+	{
+		LOG(2, "Saving original bytes failed.\n");
+		return false;
+	}
+
+	return true;
+}
+
+DWORD HookManager::GetStartAddress(const char* label)
+{
+	int index = GetHookStructIndex(label);
+	if (index == -1)
+	{
+		LOG(2, "SetJmpBackAddr: %s hook not found!\n", label);
 		return 0;
 	}
 
+	return hooks[index].startAddress;
+}
+
+//registering a new hook struct without hooking
+JMPBACKADDR HookManager::RegisterHook(const char* label, const char* pattern, const char* mask, const int len)
+{
+	int index = GetHookStructIndex(label);
+	if (index != -1)
+	{
+		LOG(2, "%s hook already present!\n", label);
+		return hooks[index].jmpBackAddr;
+	}
+
 	hooks.push_back(functionhook_t());
-	int index = hooks.size() - 1;
+	index = hooks.size() - 1;
 	hooks[index].label = label;
 	hooks[index].pattern = pattern;
 	hooks[index].mask = mask;
@@ -195,14 +239,14 @@ JMPBACKADDR HookManager::RegisterAddr(const char *label, const char *pattern, co
 		return 0;
 	}
 
-	LOG(2, "%s found at: 0x%x\n", label, startAddress);
+	LOG(2, "%s found at: 0x%p\n", label, startAddress);
 
 	return startAddress;
 }
 
 //startIndexOfWildCard = set to the wildcard's starting index
 //bytesToReturn = 1/2/4
-int HookManager::GetBytesFromAddr(const char *label, int startIndex, int bytesToReturn)
+int HookManager::GetOriginalBytes(const char* label, int startIndex, int bytesToReturn)
 {
 	int index = GetHookStructIndex(label);
 	if (index == -1)
@@ -211,9 +255,9 @@ int HookManager::GetBytesFromAddr(const char *label, int startIndex, int bytesTo
 		return 0;
 	}
 
-	void* needle = (char*)hooks[index].startAddress + (char)startIndex;
+	void* needle = (char*)hooks[index].originalBytes + (char)startIndex;
 
-	switch(bytesToReturn)
+	switch (bytesToReturn)
 	{
 	case 1:
 		return *(unsigned char*)needle;
@@ -224,7 +268,32 @@ int HookManager::GetBytesFromAddr(const char *label, int startIndex, int bytesTo
 	default:
 		return 0;
 	}
-	return 0;
+}
+
+//startIndexOfWildCard = set to the wildcard's starting index
+//bytesToReturn = 1/2/4
+int HookManager::GetBytesFromAddr(const char* label, int startIndex, int bytesToReturn)
+{
+	int index = GetHookStructIndex(label);
+	if (index == -1)
+	{
+		LOG(2, "%s hook not found!\n", label);
+		return 0;
+	}
+
+	void* needle = (char*)hooks[index].startAddress + (char)startIndex;
+
+	switch (bytesToReturn)
+	{
+	case 1:
+		return *(unsigned char*)needle;
+	case 2:
+		return *(unsigned short*)needle;
+	case 4:
+		return *(unsigned int*)needle;
+	default:
+		return 0;
+	}
 }
 
 void HookManager::Cleanup()
@@ -242,8 +311,6 @@ int HookManager::GetHookStructIndex(const char* label)
 	return -1;
 }
 
-//0 failed
-//1 success
 bool HookManager::RestoreOriginalBytes(int index)
 {
 	DWORD curProtection;
@@ -264,7 +331,7 @@ bool HookManager::RestoreOriginalBytes(int index)
 
 bool HookManager::PlaceHook(void* toHook, void* ourFunc, int len)
 {
-	if (len < 5)
+	if (len < 5 || len > MAX_LENGTH)
 	{
 		return false;
 	}
@@ -287,9 +354,10 @@ bool HookManager::PlaceHook(void* toHook, void* ourFunc, int len)
 	return true;
 }
 
-int HookManager::OverWriteBytes(void* startAddress, void* endAddress, const char *pattern, const char *mask, const char *newBytes)
+int HookManager::OverWriteBytes(void* startAddress, void* endAddress, const char* pattern,
+	const char* mask, const char* newBytes)
 {
-	int overwritten_count = 0;
+	int overwrittenCount = 0;
 
 	DWORD base = (DWORD)startAddress;
 	DWORD size = (DWORD)endAddress - (DWORD)startAddress;
@@ -314,24 +382,24 @@ int HookManager::OverWriteBytes(void* startAddress, void* endAddress, const char
 
 			DWORD curProtection;
 			if (!VirtualProtect(toOverwrite, patternLength, PAGE_EXECUTE_READWRITE, &curProtection))
-				return overwritten_count;
+				return overwrittenCount;
 
 			for (int k = 0; k < patternLength; k++)
 			{
 				*((BYTE*)(toOverwrite + k)) = newBytes[k];
 			}
 
-			overwritten_count++;
+			overwrittenCount++;
 
 			DWORD temp;
 			if (!VirtualProtect(toOverwrite, patternLength, curProtection, &temp))
-				return overwritten_count;
+				return overwrittenCount;
 		}
 	}
-	return overwritten_count;
+	return overwrittenCount;
 }
 
-DWORD HookManager::FindPattern(const char *pattern, const char *mask)
+DWORD HookManager::FindPattern(const char* pattern, const char* mask)
 {
 	////////
 	//Get all module related information
@@ -372,4 +440,4 @@ DWORD HookManager::FindPattern(const char *pattern, const char *mask)
 		}
 	}
 	return NULL;
-} 
+}

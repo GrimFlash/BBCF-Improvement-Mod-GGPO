@@ -920,7 +920,7 @@ bool additional_hooks_manual()
 
 	GetP1ScreenPosXJmpBackAddr = HookManager::SetHook("GetP1ScreenPosX", "\x8b\x37\x03\xf2\x51", "xxxxx", 5, GetP1ScreenPosX);
 
-	HookManager::RegisterAddr("GetMoneyAddr", "\xff\x35\x00\x00\x00\x00\x8d\x45\xb4\x68\x00\x00\x00\x00\x50", "xx????xxxx????x", 6);
+	HookManager::RegisterHook("GetMoneyAddr", "\xff\x35\x00\x00\x00\x00\x8d\x45\xb4\x68\x00\x00\x00\x00\x50", "xx????xxxx????x", 6);
 	Containers::gameVals.pGameMoney = (int*)HookManager::GetBytesFromAddr("GetMoneyAddr", 2, 4);
 
 	CustomGamemodeHooks();
