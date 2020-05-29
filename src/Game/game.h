@@ -93,12 +93,7 @@ typedef enum PlayerDataAllowedNormals {
 
 /*
 struct RandomNumberGenerator {
-    int cursor;
-    DWORD dwordarr_0x4_size0xe3[227];
-    DWORD dwordarr_0x390_size0x18d[397];
-    int unc_seedTracker;
-    DWORD dwordarr_9c8_size0x270[624];
-    int bIsInitialized;
+   
 };
 */
 
