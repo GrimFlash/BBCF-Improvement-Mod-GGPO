@@ -27,6 +27,7 @@
     <ClCompile Include="src\D3D9EXWrapper\ID3D9EXWrapper_Device.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3D9Wrapper_Sprite.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3DXWrapper_Effect.cpp" />
+    <ClCompile Include="src\Game\game.cpp" />
     <ClCompile Include="src\hook_manager.cpp" />
     <ClCompile Include="src\ImGui\ImGuiSystem.cpp" />
     <ClCompile Include="src\ImGui\fonts.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="include\steamapi_helper.h" />
     <ClInclude Include="include\update_check.h" />
     <ClInclude Include="include\utils.h" />
+    <ClInclude Include="src\Game\game.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def" />
@@ -150,12 +152,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;BBCF_IM_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(SolutionDir)depends\GGPO\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>export/dinput8.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)depends\GGPO\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -170,8 +174,7 @@
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)depends\GGPO\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,8 +183,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <ModuleDefinitionFile>export/dinput8.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)depends\GGPO\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

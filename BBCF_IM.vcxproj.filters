@@ -127,6 +127,7 @@
     <ClCompile Include="depends\imgui\imgui_demo.cpp" />
     <ClCompile Include="depends\imgui\imgui_draw.cpp" />
     <ClCompile Include="depends\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="src\Game\game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\SteamApiWrapper\SteamMatchmakingWrapper.h">
@@ -229,6 +230,7 @@
     <ClInclude Include="depends\imgui\stb_textedit.h" />
     <ClInclude Include="depends\imgui\stb_truetype.h" />
     <ClInclude Include="depends\imgui\imconfig.h" />
+    <ClInclude Include="src\Game\game.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def">
