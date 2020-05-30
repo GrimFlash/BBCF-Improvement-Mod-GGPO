@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <dinput.h>
-//#include <ggponet.h>
+#include <ggponet.h>
 
 /*
 const unsigned short MIN_HEAT = 0;
