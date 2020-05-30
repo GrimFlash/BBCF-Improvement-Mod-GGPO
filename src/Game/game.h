@@ -156,9 +156,6 @@ struct InputRewriteStruct {
 typedef struct GameMethods {
 
 
-  (This will be a part of making save/load state
-
-
 } GameMethods;
 */
 
