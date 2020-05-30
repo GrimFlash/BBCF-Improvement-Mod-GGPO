@@ -18,7 +18,6 @@ Copy the compiled binary, settings.ini, and palettes.ini file from the bin/ fold
 - Detours 1.5
 - DirectX SDK
 - [Steamworks SDK (v1.42)](https://partner.steamgames.com/downloads/list)
-- [GGPO SDK](https://github.com/pond3r/ggpo)
 
 ## Contributing
 Contributions of all kinds are welcome!
