@@ -39,7 +39,7 @@ latency create. Instead, developers and community members alike have
 espoused the virtues of rollback-based netcode, including
 [Mike "MikeZ" Zaimont of Lab Zero and Skullgirls](https://mikezsez.blogspot.com/2019/11/lets-talk-about-rollbacks.html),
 [Michael Stallone of Netherrealm and Mortal Kombat](https://youtu.be/7jb0FOcImdg),
-and [Adam "Keits" Heart of Iron Galaxy and Killer Instinct](https://twitter.com/thekeits/status/1143897723848003584?lang=en).
+and [Adam "Keits" Heart of Iron Galaxy and Killer Instinct](https://www.youtube.com/watch?v=1RI5scXYhK0).
 
 BBCF uses an engine that was built on lockstep netcode.
 While in some cases its netcode can hold up relatively well, playing with
