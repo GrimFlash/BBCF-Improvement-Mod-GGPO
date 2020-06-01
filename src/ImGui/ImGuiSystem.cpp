@@ -16,6 +16,7 @@
 #include "../../include/gamestates_defines.h"
 #include "../../include/bbcf_im_networking.h"
 #include "../../include/internal_palette_datas.h"
+#include "../../src/Game/game.h"
 
 // reminder to myself, pitfall of using imgui in your project:
 // ALWAYS ADD THE IMGUI SOURCE FILES TO YOUR PROJECT OR YOU WILL GET UNRESOLVED EXTERNAL SYMBOL ERRORS
@@ -468,7 +469,7 @@ void ImGuiSystem::HandleImGuiWindows()
 
 	if (show_save_load_state_window)
 		ShowSaveLoadStateWindow(&show_save_load_state_window);
-
+	
 	if (show_palette_editor_window && show_main_window)
 		ShowPaletteEditorWindow(&show_palette_editor_window);
 
@@ -605,10 +606,14 @@ void ImGuiSystem::ShowSaveLoadStateWindow(bool* p_open)
 	if (*Containers::gameVals.pGameState != GAME_STATE_IN_MATCH)
 		return;
 
-	ImGui::Begin("Save/Load State", p_open);
-
+	static SavedGameState savedState;
 	static int nFramesToSkipRender = 0;
+	static int nMinSkip = 0;
+	static int nMaxSkip = 60;
+	static int nFrameStep = 1;
 
+	ImGui::Begin("Save/Load State", p_open);
+	
 	if (nFramesToSkipRender < 0) {
 		nFramesToSkipRender = 0;
 	}
@@ -618,9 +623,20 @@ void ImGuiSystem::ShowSaveLoadStateWindow(bool* p_open)
 
 	ImGui::InputInt("Num of frames to skip", &nFramesToSkipRender);
 
-	ImGui::Button("Save");
+	if (ImGui::Button("Save")) {
 
-	ImGui::Button("Load");
+		//SaveGameState(lpGameState, &savedState);
+
+	}
+
+	if (ImGui::Button("Load")) {
+		
+		/*
+		lpGameState->nFramesSkipped = 0;
+		lpGameState->nFramesToSkipRender = nFramesToSkipRender;
+		LoadGameState(lpGameState, &savedState);
+		*/
+	}
 
 	ImGui::EndPopup();
 

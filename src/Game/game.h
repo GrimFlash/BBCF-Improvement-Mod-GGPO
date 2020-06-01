@@ -48,8 +48,6 @@ typedef enum HitboxTypes {
 typedef struct SpriteInfo {
     
 
-
-
 } SpriteInfo;
 */
 
@@ -77,19 +75,30 @@ typedef enum PlayerDataAllowedNormals {
     NORMAL_4D =
     NORMAL_5D =
     NORMAL_6D =
+    NORMAL_7D =
+    NORMAL_8D =
+    NORMAL_9D =
+    NORMAL_J2A =
     NORMAL_J5A =
     NORMAL_J2B =
     NORMAL_J5B =
+    NORMAL_J6B =
     NORMAL_J2C =
     NORMAL_J5C =
     NORMAL_J2D =
     NORMAL_J4D =
     NORMAL_J5D =
     NORMAL_J6D =
+    NORMAL_J7D =
     NORMAL_J8D =
+    NORMAL_J9D =
 
 } PlayerDataAllowedNormals;
 */
+
+typedef struct GameObjectData GameObjectData;
+typedef struct PlayerData PlayerData;
+typedef struct SavedGameState SavedGameState;
 
 /*
 struct RandomNumberGenerator {
@@ -97,21 +106,25 @@ struct RandomNumberGenerator {
 };
 */
 
-/*
+
 typedef struct ClientSynchronizationRequest {
+
+    unsigned short nPort;
+    int nSelectedCharacter;
 
 } ClientSynchronizationRequest;
 
-(GGPO related, don't worry about this for now)
-*/
 
-/*
+
 typedef struct ServerSynchronizationResponse {
- 
+
+    unsigned short nPort;
+    int nSelectedCharacter;
+    //Reminder to make sure to put RNG structs in here
+
 } ServerSynchronizationResponse;
 
-(GGPO related, don't worry about this for now)
-*/
+
 
 typedef struct CharacterSelection {
     char* name;
@@ -120,7 +133,7 @@ typedef struct CharacterSelection {
 
 /*
 static CharacterSelection CHARACTERS[] = {
-    {"Charactername here", <hexadecimal # here},
+    {"Charactername here", <hexadecimal # here>},
 
     repeat for every character
  
@@ -159,20 +172,36 @@ typedef struct GameMethods {
 } GameMethods;
 */
 
-/*typedef struct GGPOState {
+typedef struct GGPOState {
   
-  (GGPO related, don't worry about this for now)
+    GGPOSession* ggpo;
+    GGPOPlayer p1;
+    GGPOPlayer p2;
+    GGPOPlayer* localPlayer;
+    GGPOPlayer* remotePlayer;
+    GGPOPlayerHandle player_handles[2];
+    GGPOSessionCallbacks cb;
+    GGPOErrorCode lastResult;
+    int localPlayerIndex;
+    int characters[2];
+    char bIsSynchronized;
+    int nFramesAhead;
 
 } GGPOState;
-*/
 
-/*
+
+
 typedef struct SessionInitiationState {
 
-(GGPO related, don't worry about this for now)
+    ClientSynchronizationRequest request;
+    ServerSynchronizationResponse response;
+    bool bHasRequest;
+    bool bHasResponse;
+    bool bIsHost;
+   
 
 } SessionInitializationState;
-*/
+
 
 /*
 typedef struct PlayData {
@@ -188,11 +217,31 @@ typedef struct CharacterConstants {
 } CharacterConstants;
 */
 
-/*
+
 typedef struct GameState {
 
+    int nFramesToSkipRender;
+    int nFramesSkipped;
+    int lastSecondNumFramesSimulated;
+
+   GGPOState ggpoState;
+   SessionInitiationState sessionInitState;
+
+   //Struct definitons for GameObjectData
+
+   //Camera values
+
+   PlayerData* arrPlayerData;
+   int* nRoundTimeRemaining;
+
+   //Will update this more as I get a clearer idea on what exactly we'll need
+
+ 
+
 } GameState;
-*/
+
+void SaveGameState(GameState* gameState, SavedGameState* dest);
+void LoadGameState(GameState* gameState, SavedGameState* src);
 
 /*
 struct GameObjectScriptingStruct {
@@ -248,15 +297,21 @@ struct GameObjectData {
 };
 */
 
-/*
+
 struct PlayerData {
 
-};
-*/
+    /*
+    Here we will need to put in stuff related to characters, ranging
+    from current heat to character specific stuff (i.e Susan seals)
+    */
 
-/*
+    enum PlayerDataAllowedNormals allowedNormals;
+
+};
+
+
+
 typedef struct SavedGameState {
 
 
 } SavedGameState;
-*/
