@@ -294,13 +294,11 @@ void ImGuiSystem::HandleImGuiWindows()
 
 	if (ImGui::IsKeyPressed(toggle_key))
 	{
-		ImGui::SetNextWindowCollapsed(show_main_window);
-		show_main_window ^= 1;
-		is_main_window_visible = show_main_window;
+		show_main_window = !show_main_window;
 	}
 
 	//toggle window on/off not working???
-	//if(show_main_window)
+	if(show_main_window)
 	{
 		ImGui::Begin(main_title.c_str(), NO_CLOSE_FLAG, ImGuiWindowFlags_AlwaysAutoResize);
 
