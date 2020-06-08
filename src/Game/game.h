@@ -300,41 +300,7 @@ typedef struct GameState {
 
 extern std::unique_ptr<GameState> gGameState;
 
-static void InitGameStatePointers()
-{
-    gGameState = std::make_unique<GameState>();
-
-    auto get_address_or_log = [](std::string const& name, uintptr_t base, auto offsets) {
-        uintptr_t addr = FindAddress(base, offsets);
-
-        if (!addr) {
-            LOG(2, ("Could not find address for " + name).c_str());
-        }
-
-        return addr;
-    };
-
-    uintptr_t base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
-    gGameState->time = (int*)(base + pointer_offsets::time);
-    gGameState->player1.health = (int*)get_address_or_log(
-        "p1 health", 
-        base + pointer_offsets::player1, 
-        pointer_offsets::player_common::health
-    );
-
-    gGameState->player1.x_pos = (int*)get_address_or_log(
-        "p1 xpos",
-        base + pointer_offsets::player1,
-        pointer_offsets::player_common::xpos
-    );
-
-    gGameState->player1.y_pos = (int*)get_address_or_log(
-        "p1 ypos",
-        base + pointer_offsets::player1,
-        pointer_offsets::player_common::ypos
-    );
-
-}
+void InitGameStatePointers();
 
 typedef struct SavedGameState {
 
@@ -356,9 +322,14 @@ static SavedGameState SaveGameState()
 
     if (gGameState) {
         game_state.time = *gGameState->time;
+
         game_state.p1.health = *gGameState->player1.health;
         game_state.p1.x_pos = *gGameState->player1.x_pos;
         game_state.p1.y_pos = *gGameState->player1.y_pos;
+
+        game_state.p2.health = *gGameState->player2.health;
+        game_state.p2.x_pos = *gGameState->player2.x_pos;
+        game_state.p2.y_pos = *gGameState->player2.y_pos;
     }
 
     return game_state;
@@ -368,9 +339,14 @@ static void LoadGameState(SavedGameState const& game_state)
 {
     if (gGameState) {
         *gGameState->time = game_state.time;
+
         *gGameState->player1.health = game_state.p1.health;
         *gGameState->player1.x_pos = game_state.p1.x_pos;
         *gGameState->player1.y_pos = game_state.p1.y_pos;
+
+        *gGameState->player2.health = game_state.p2.health;
+        *gGameState->player2.x_pos = game_state.p2.x_pos;
+        *gGameState->player2.y_pos = game_state.p2.y_pos;
     }
 }
 
