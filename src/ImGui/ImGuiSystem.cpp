@@ -293,11 +293,11 @@ void ImGuiSystem::HandleImGuiWindows()
 	}
 
 	static game::SavedGameState game_state;
-	if (ImGui::IsKeyPressed(119)) { // F8
+	if (ImGui::IsKeyPressed(119, false)) { // F8
 		game_state = game::SaveGameState();
 	}
 
-	if (ImGui::IsKeyPressed(120)) { // F9
+	if (ImGui::IsKeyPressed(120, false)) { // F9
 		game::LoadGameState(game_state);
 	}
 
