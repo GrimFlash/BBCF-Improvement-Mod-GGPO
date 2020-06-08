@@ -292,6 +292,15 @@ void ImGuiSystem::HandleImGuiWindows()
 		io.DisplaySize = ImVec2(1280, 768);
 	}
 
+	static game::SavedGameState game_state;
+	if (ImGui::IsKeyPressed(119)) { // F8
+		game_state = game::SaveGameState();
+	}
+
+	if (ImGui::IsKeyPressed(120)) { // F9
+		game::LoadGameState(game_state);
+	}
+
 	if (ImGui::IsKeyPressed(toggle_key))
 	{
 		show_main_window = !show_main_window;
@@ -604,7 +613,7 @@ void ImGuiSystem::ShowSaveLoadStateWindow(bool* p_open)
 	if (*Containers::gameVals.pGameState != GAME_STATE_IN_MATCH)
 		return;
 
-	static SavedGameState savedState;
+	static game::SavedGameState savedState;
 	static int nFramesToSkipRender = 0;
 	static int nMinSkip = 0;
 	static int nMaxSkip = 60;
@@ -623,12 +632,12 @@ void ImGuiSystem::ShowSaveLoadStateWindow(bool* p_open)
 
 	if (ImGui::Button("Save")) {
 
-		//SaveGameState(lpGameState, &savedState);
+		savedState = game::SaveGameState();
 
 	}
 
 	if (ImGui::Button("Load")) {
-		
+		game::LoadGameState(savedState);
 		/*
 		lpGameState->nFramesSkipped = 0;
 		lpGameState->nFramesToSkipRender = nFramesToSkipRender;
