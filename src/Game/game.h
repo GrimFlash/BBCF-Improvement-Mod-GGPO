@@ -7,8 +7,8 @@
 #include <memory>
 #include <array>
 
-#include "../containers.h"
-#include "../logger.h"
+#include "../../include/containers.h"
+#include "../../include/logger.h"
 
 namespace game {
 
