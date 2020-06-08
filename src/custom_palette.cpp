@@ -3,6 +3,7 @@
 #include "../include/SteamApiWrapper/SteamNetworkingWrapper.h"
 #include "../include/settings.h"
 #include "../include/hook_manager.h"
+#include "game/game.h"
 #include <steam_api.h>
 #include "../include/ImGui/ImGuiSystem.h"
 #include "../include/containers.h"
@@ -174,6 +175,8 @@ void __declspec(naked)GetCharObjPointers()
 {
 	__asm pushad
 	LOG(2, "GetCharObjPointers\n");
+	// TODO: make better effort to integrate with existing systems and/or move stuff around to make sense
+	game::InitGameStatePointers();
 	__asm popad
 
 	__asm
