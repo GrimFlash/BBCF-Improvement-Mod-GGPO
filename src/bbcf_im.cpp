@@ -28,6 +28,8 @@ void BBCF_IM_Start()
 		Settings::initSavedSettings();
 		Containers::Init();
 
+		Containers::gameProc.hBBCFGameModule = GetModuleHandleA("BBCF.exe");
+
 		HMODULE hM = GetModuleHandleA("d3d9.dll");
 		PBYTE pDirect3DCreate9Ex = (PBYTE)GetProcAddress(hM, "Direct3DCreate9Ex");
 		checkHookSuccess((PBYTE)pDirect3DCreate9Ex, "Direct3DCreate9Ex");
