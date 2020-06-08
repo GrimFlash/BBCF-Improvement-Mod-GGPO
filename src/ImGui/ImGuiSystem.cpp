@@ -295,7 +295,6 @@ void ImGuiSystem::HandleImGuiWindows()
 	if (ImGui::IsKeyPressed(toggle_key))
 	{
 		show_main_window = !show_main_window;
-		io.MouseDrawCursor = !io.MouseDrawCursor;
 	}
 
 	//toggle window on/off not working???
