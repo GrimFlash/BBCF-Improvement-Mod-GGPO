@@ -281,7 +281,7 @@ void ImGuiSystem::HandleImGuiWindows()
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	io.MouseDrawCursor = show_log_window | show_notification_window | show_palette_editor_window | is_main_window_visible | IsUpdateAvailable | show_debug_window | show_demo_window;
+	io.MouseDrawCursor = show_log_window | show_notification_window | show_palette_editor_window | show_main_window | IsUpdateAvailable | show_ggpo_host_join_window | show_ggpo_spectate_window | show_save_load_state_window | show_demo_window;
 	
 	if (Settings::settingsIni.viewport == 2)
 	{
@@ -294,13 +294,11 @@ void ImGuiSystem::HandleImGuiWindows()
 
 	if (ImGui::IsKeyPressed(toggle_key))
 	{
-		ImGui::SetNextWindowCollapsed(show_main_window);
-		show_main_window ^= 1;
-		is_main_window_visible = show_main_window;
+		show_main_window = !show_main_window;
 	}
 
 	//toggle window on/off not working???
-	//if(show_main_window)
+	if(show_main_window)
 	{
 		ImGui::Begin(main_title.c_str(), NO_CLOSE_FLAG, ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -453,12 +451,12 @@ void ImGuiSystem::HandleImGuiWindows()
 
 	// 3. Show the windows!
 #ifndef RELEASE_VER
-	if (show_demo_window)
+	if (show_demo_window && show_main_window)
 	{
 		ImGui::SetNextWindowPos(ImVec2(550, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
 		ImGui::ShowDemoWindow(&show_demo_window);
 	}
-	if(show_debug_window)
+	if(show_debug_window && show_main_window)
 		ShowDebugWindow(&show_debug_window);
 #endif
 	if (show_ggpo_host_join_window)
