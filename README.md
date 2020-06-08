@@ -1,5 +1,5 @@
 # BBCF-Improvement-Mod-GGPO
-A netplay implementation utilizing kovidomi's BBCF Improvment mod for use with the Steam release of Blazblue Central Fiction.
+A netplay implementation utilizing kovidomi's BBCF Improvement mod for use with the Steam release of Blazblue Central Fiction.
 
 ## Table of contents
 * [Compiling and usage](#compiling-and-usage)
