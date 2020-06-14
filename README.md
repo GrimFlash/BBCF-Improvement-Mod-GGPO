@@ -13,12 +13,6 @@ BBCF Improvement Mod GGPO is coded using Visual Studio 2019. <br>
 To compile, you should only need to load the sln file and compile as-is. No changes should be needed to the solution or source.<br>
 Copy the compiled binary, settings.ini, and palettes.ini file from the bin/ folder into the game's root folder.
 
-## Requirements:
-- Visual Studio 2019
-- Detours 1.5
-- DirectX SDK
-- [Steamworks SDK (v1.42)](https://partner.steamgames.com/downloads/list)
-
 ## Contributing
 Contributions of all kinds are welcome!
 We're cuurently seeking help with C++ development, x86 assembly, reverse engineering, and networking code, but non-technical skills are also appreciated. Some ways you can contribute include:
