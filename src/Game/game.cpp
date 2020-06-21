@@ -2,12 +2,12 @@
 
 namespace game {
 
-using CharData = std::array<unsigned char, 0x214C4>;
-
+using CharData = std::array<unsigned char, 0x214C4 >;
+using ObjData = std::array<unsigned char, 0x214C4 >;
 std::unique_ptr<GameState> gGameState;
 std::unique_ptr<CharData> gP1Data;
 std::unique_ptr<CharData> gP2Data;
-std::unique_ptr<CharData> gP1Puppet;
+
 /// <summary>
 /// Gets the pointer data pointers in BBCF's memory, so we can access and write to them later for
 /// saving and loading state
@@ -24,9 +24,7 @@ static void GetPlayerPointers(uintptr_t base, PlayerData& player_data, std::stri
         if (!addr) {
             LOG(2, ("Could not find address for " + name).c_str());
         }
-        else {
-            LOG(2, ("Found " + name+ "\n").c_str());
-        }
+
         return addr;
     };
 
@@ -48,39 +46,12 @@ static void GetPlayerPointers(uintptr_t base, PlayerData& player_data, std::stri
         pointer_offsets::player_common::ypos
     );
 }
-static void GetObjectPointers(uintptr_t base, ObjectData& object_data, std::string const& object)
-{
-    auto get_address_or_log = [](std::string const& name, uintptr_t base, auto offsets) {
-        uintptr_t addr = FindAddress(base, offsets);
-
-        if (!addr) {
-            LOG(2, ("Could not find address for " + name).c_str());
-        }
-        else {
-            LOG(2, ("Found " + name + "\n").c_str());
-        }
-        return addr;
-    };
-
-    object_data.x_pos = (int*)get_address_or_log(
-        object + " xpos",
-        base,
-        pointer_offsets::player_common::xpos
-    );
-
-    object_data.y_pos = (int*)get_address_or_log(
-        object + " ypos",
-        base,
-        pointer_offsets::player_common::ypos
-    );
-}
 
 void InitGameStatePointers()
 {
     gGameState = std::make_unique<GameState>();
     gP1Data = std::make_unique<CharData>();
     gP2Data = std::make_unique<CharData>();
-    gP1Puppet = std::make_unique<CharData>();
 
     auto get_address_or_log = [](std::string const& name, uintptr_t base, auto offsets) {
         uintptr_t addr = FindAddress(base, offsets);
@@ -96,7 +67,6 @@ void InitGameStatePointers()
     gGameState->time = (int*)(base + pointer_offsets::time);
     GetPlayerPointers(base + pointer_offsets::player1, gGameState->player1, "Player 1");
     GetPlayerPointers(base + pointer_offsets::player2, gGameState->player2, "Player 2");
-    GetPlayerPointers(base + pointer_offsets::player1Pointer, gGameState->p1Puppet, "P1 Puppet");
 }
 
 }

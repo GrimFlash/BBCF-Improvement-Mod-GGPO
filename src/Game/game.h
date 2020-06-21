@@ -122,19 +122,6 @@ typedef struct PlayerData {
 
 } PlayerData;
 
-typedef struct ObjectData {
-
-    /*
-    Here we will need to put in stuff related to characters, ranging
-    from current heat to character specific stuff (i.e Susan seals)
-    */
-    int* x_pos;
-    int* y_pos;
-
-    //enum PlayerDataAllowedNormals allowedNormals;
-
-} ObjectData;
-
 /*
 struct RandomNumberGenerator {
    
@@ -275,14 +262,12 @@ static uintptr_t FindAddress(uintptr_t base, std::array<unsigned int, T> const& 
 namespace pointer_offsets {
     static const unsigned int time      = 0xDA0CE8;
     static const unsigned int player1   = 0x819DF0;
-    static const unsigned int player1Pointer = 0xDA0694;
     static const unsigned int player2   = 0xDC204C;
 
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
         static const std::array<unsigned int, 1> xpos   = { 0x268 };
         static const std::array<unsigned int, 1> ypos   = { 0x26C };
-        static const std::array<unsigned int, 1> puppet = { 0x24C };
     }
 }
 
@@ -302,7 +287,7 @@ typedef struct GameState {
    int* time;
    PlayerData player1;
    PlayerData player2;
-   PlayerData p1Puppet;
+
    //Will update this more as I get a clearer idea on what exactly we'll need
 
  
@@ -312,9 +297,9 @@ typedef struct GameState {
 extern std::unique_ptr<GameState> gGameState;
 
 void InitGameStatePointers();
-extern std::unique_ptr<std::array<unsigned char, 0x214C4>> gP1Data;
-extern std::unique_ptr<std::array<unsigned char, 0x214C4>> gP2Data;
-extern std::unique_ptr<std::array<unsigned char, 0x214C4>> gP1Puppet;
+extern std::unique_ptr<std::array<unsigned char, 0x214C4 >> gP1Data;
+extern std::unique_ptr<std::array<unsigned char, 0x214C4 >> gP2Data;
+
 typedef struct SavedGameState {
 
     struct Player {
@@ -348,10 +333,15 @@ static SavedGameState SaveGameState()
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
     auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
     auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
-    auto p1pup_dref = *(uintptr_t*)(base + pointer_offsets::player1Pointer);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
-    std::memcpy(gP1Puppet->data(), (unsigned char*)(p1pup_dref), 0x214C4);
+   // LOG(2, ("Could not find address for " + name).c_str());
+    std::string str;
+    str.append(reinterpret_cast<const char*>((unsigned char*)(p1_dref)));
+    LOG(2, str.c_str());
+    str = "";
+    str.append(reinterpret_cast<const char*>((unsigned char*)(p2_dref)));
+    LOG(2, str.c_str());
     return game_state;
 }
 
@@ -360,22 +350,20 @@ static void LoadGameState(SavedGameState const& game_state)
     if (gGameState) {
         *gGameState->time = game_state.time;
 
-        *gGameState->player1.health = game_state.p1.health;
+        /**gGameState->player1.health = game_state.p1.health;
         *gGameState->player1.x_pos = game_state.p1.x_pos;
         *gGameState->player1.y_pos = game_state.p1.y_pos;
 
         *gGameState->player2.health = game_state.p2.health;
         *gGameState->player2.x_pos = game_state.p2.x_pos;
-        *gGameState->player2.y_pos = game_state.p2.y_pos;
+        *gGameState->player2.y_pos = game_state.p2.y_pos;*/
     }
 
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
     auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
     auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
-    auto p1pup_dref = *(uintptr_t*)(base + pointer_offsets::player1Pointer);
     std::memcpy((unsigned char*)p1_dref, gP1Data->data(), 0x214C4);
     std::memcpy((unsigned char*)p2_dref, gP2Data->data(), 0x214C4);
-    std::memcpy((unsigned char*)(p1pup_dref), gP1Puppet->data(), 0x214C4);
 }
 
 /*
