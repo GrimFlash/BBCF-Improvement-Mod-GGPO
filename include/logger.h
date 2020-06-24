@@ -11,6 +11,7 @@ if (DEBUG_LEVEL >= _level) { logger(_str, __VA_ARGS__); }}
 #endif
 
 inline void logger(const char* message, ...);
+void logGameState(unsigned int* time, ...);
 void openLogger();
 void closeLogger();
 //free it after usage!!
