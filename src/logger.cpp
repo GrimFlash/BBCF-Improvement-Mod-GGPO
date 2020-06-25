@@ -40,15 +40,11 @@ std::string uint_to_hex(unsigned int i)
 		<< std::hex << i;
 	return stream.str();
 }
-void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* objectData[], ...)
+void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* objectData[])
 {
-	va_list args;
-	va_start(args, time);
-	vfprintf(g_oFile, ("Time Address: "+uint_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str(),args);
-	vfprintf(g_oFile, ("P1 Address: " + uint_to_hex((unsigned int)p1) + " Value: " + uint_to_hex(*p1) + "\n").c_str(), args);
-	vfprintf(g_oFile, ("P2 Address: " + uint_to_hex((unsigned int)p2) + " Value: " + uint_to_hex(*p2) + "\n").c_str(), args);
-	va_end(args);
-
+	fprintf(g_oFile, ("Time Address: "+uint_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str());
+	fprintf(g_oFile, ("P1 Address: " + uint_to_hex((unsigned int)p1) + " Value: " + uint_to_hex(*p1) + "\n").c_str());
+	fprintf(g_oFile, ("P2 Address: " + uint_to_hex((unsigned int)p2) + " Value: " + uint_to_hex(*p2) + "\n").c_str());
 	fflush(g_oFile);
 }
 
