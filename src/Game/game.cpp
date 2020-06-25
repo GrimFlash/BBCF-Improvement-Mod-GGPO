@@ -2,8 +2,8 @@
 
 namespace game {
 
-using CharData = std::array<unsigned char, 0x214C4>;
-
+using CharData = std::array<unsigned char, 0x214C4 >;
+using ObjData = std::array<unsigned char, 0x214C4 >;
 std::unique_ptr<GameState> gGameState;
 std::unique_ptr<CharData> gP1Data;
 std::unique_ptr<CharData> gP2Data;

@@ -297,8 +297,9 @@ typedef struct GameState {
 extern std::unique_ptr<GameState> gGameState;
 
 void InitGameStatePointers();
-extern std::unique_ptr<std::array<unsigned char, 0x214C4>> gP1Data;
-extern std::unique_ptr<std::array<unsigned char, 0x214C4>> gP2Data;
+
+extern std::unique_ptr<std::array<unsigned char, 0x214C4 >> gP1Data;
+extern std::unique_ptr<std::array<unsigned char, 0x214C4 >> gP2Data;
 
 typedef struct SavedGameState {
 
@@ -320,22 +321,24 @@ static SavedGameState SaveGameState()
 
     if (gGameState) {
         game_state.time = *gGameState->time;
-
+        /*
         game_state.p1.health = *gGameState->player1.health;
         game_state.p1.x_pos = *gGameState->player1.x_pos;
         game_state.p1.y_pos = *gGameState->player1.y_pos;
 
         game_state.p2.health = *gGameState->player2.health;
         game_state.p2.x_pos = *gGameState->player2.x_pos;
-        game_state.p2.y_pos = *gGameState->player2.y_pos;
+        game_state.p2.y_pos = *gGameState->player2.y_pos;*/
     }
-
+    
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
-    auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
-    auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
+    auto p1_ref= (uintptr_t*)(base + pointer_offsets::player1);
+    auto p1_dref = *p1_ref;
+    auto p2_ref= (uintptr_t*)(base + pointer_offsets::player2);
+    auto p2_dref = *p2_ref;
+    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
-
     return game_state;
 }
 
@@ -352,7 +355,6 @@ static void LoadGameState(SavedGameState const& game_state)
         *gGameState->player2.x_pos = game_state.p2.x_pos;
         *gGameState->player2.y_pos = game_state.p2.y_pos;*/
     }
-
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
     auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
     auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
