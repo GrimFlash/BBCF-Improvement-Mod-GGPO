@@ -332,9 +332,11 @@ static SavedGameState SaveGameState()
     }
     
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
-    auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
-    auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
-    logGameState((unsigned int*)(base + pointer_offsets::time));
+    auto p1_ref= (uintptr_t*)(base + pointer_offsets::player1);
+    auto p1_dref = *p1_ref;
+    auto p2_ref= (uintptr_t*)(base + pointer_offsets::player2);
+    auto p2_dref = *p2_ref;
+    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
     return game_state;

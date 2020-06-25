@@ -42,16 +42,14 @@ std::string int_to_hex(T i)
 	return stream.str();
 }
 //,unsigned int p1Addr,unsigned int p2Addr,unsigned int objectData[] = {},
-void logGameState(unsigned int* time, ...)
+void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, ...)
 {
-	//if (!message) { return; }
-	//char* char_type = new char[time.length()];
-	//strcpy(char_type, temp_str.c_str());
 	va_list args;
 	va_start(args, time);
-	auto timeValue = std::to_string(*time);
-	vfprintf(g_oFile, ("Time Address: "+int_to_hex((unsigned int)time) + " Value: "+timeValue+"\n").c_str(),args);
-	//va_end(args);
+	vfprintf(g_oFile, ("Time Address: "+int_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str(),args);
+	vfprintf(g_oFile, ("P1 Address: " + int_to_hex((unsigned int)p1) + " Value: " + int_to_hex(*p1) + "\n").c_str(), args);
+	vfprintf(g_oFile, ("P2 Address: " + int_to_hex((unsigned int)p2) + " Value: " + int_to_hex(*p2) + "\n").c_str(), args);
+	va_end(args);
 
 	fflush(g_oFile);
 }
