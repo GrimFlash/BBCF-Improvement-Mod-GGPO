@@ -32,23 +32,21 @@ inline void logger(const char* message, ...)
 	fflush(g_oFile);
 }
 
-template< typename T >
-std::string int_to_hex(T i)
+std::string uint_to_hex(unsigned int i)
 {
 	std::stringstream stream;
 	stream << "0x"
-		<< std::setfill('0') << std::setw(sizeof(T) * 2)
+		<< std::setfill('0') << std::setw(sizeof(unsigned int) * 2)
 		<< std::hex << i;
 	return stream.str();
 }
-//,unsigned int p1Addr,unsigned int p2Addr,unsigned int objectData[] = {},
-void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, ...)
+void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* objectData[], ...)
 {
 	va_list args;
 	va_start(args, time);
-	vfprintf(g_oFile, ("Time Address: "+int_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str(),args);
-	vfprintf(g_oFile, ("P1 Address: " + int_to_hex((unsigned int)p1) + " Value: " + int_to_hex(*p1) + "\n").c_str(), args);
-	vfprintf(g_oFile, ("P2 Address: " + int_to_hex((unsigned int)p2) + " Value: " + int_to_hex(*p2) + "\n").c_str(), args);
+	vfprintf(g_oFile, ("Time Address: "+uint_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str(),args);
+	vfprintf(g_oFile, ("P1 Address: " + uint_to_hex((unsigned int)p1) + " Value: " + uint_to_hex(*p1) + "\n").c_str(), args);
+	vfprintf(g_oFile, ("P2 Address: " + uint_to_hex((unsigned int)p2) + " Value: " + uint_to_hex(*p2) + "\n").c_str(), args);
 	va_end(args);
 
 	fflush(g_oFile);
