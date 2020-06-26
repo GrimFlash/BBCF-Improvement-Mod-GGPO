@@ -50,6 +50,7 @@ Authors
 
 * @GrimFlash - founder
 * JoeS
+* DaInfamoose
 
 ## License
 This project is licensed under the MIT License -
