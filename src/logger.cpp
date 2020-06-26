@@ -1,7 +1,9 @@
 #include "../include/logger.h"
 #include <time.h>
 #include <fstream>
-
+#include <sstream>
+#include <iomanip> 
+#include <string> 
 bool checkHookSuccess(PBYTE addr, const char* funcName)
 {
 	if (!addr)
@@ -29,6 +31,23 @@ inline void logger(const char* message, ...)
 
 	fflush(g_oFile);
 }
+
+std::string uint_to_hex(unsigned int i)
+{
+	std::stringstream stream;
+	stream << "0x"
+		<< std::setfill('0') << std::setw(sizeof(unsigned int) * 2)
+		<< std::hex << i;
+	return stream.str();
+}
+void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* objectData[])
+{
+	fprintf(g_oFile, ("Time Address: "+uint_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str());
+	fprintf(g_oFile, ("P1 Address: " + uint_to_hex((unsigned int)p1) + " Value: " + uint_to_hex(*p1) + "\n").c_str());
+	fprintf(g_oFile, ("P2 Address: " + uint_to_hex((unsigned int)p2) + " Value: " + uint_to_hex(*p2) + "\n").c_str());
+	fflush(g_oFile);
+}
+
 
 char* getFullDate()
 {

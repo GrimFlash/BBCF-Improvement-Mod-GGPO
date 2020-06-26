@@ -293,11 +293,11 @@ void ImGuiSystem::HandleImGuiWindows()
 	}
 
 	static game::SavedGameState game_state;
-	if (ImGui::IsKeyPressed(119)) { // F8
+	if (ImGui::IsKeyPressed(119, false)) { // F8
 		game_state = game::SaveGameState();
 	}
 
-	if (ImGui::IsKeyPressed(120)) { // F9
+	if (ImGui::IsKeyPressed(120, false)) { // F9
 		game::LoadGameState(game_state);
 	}
 
@@ -552,6 +552,12 @@ void ImGuiSystem::ShowDebugWindow(bool* p_open)
 		ImGui::Text("\tP1_maxHP: %d", Containers::gameVals.P1CharObjPointer == 0 ? -1 : Containers::gameVals.P1CharObjPointer->maxHP);
 		ImGui::Text("\tP2_curHP: %d", Containers::gameVals.P2CharObjPointer == 0 ? -1 : Containers::gameVals.P2CharObjPointer->currentHP);
 		ImGui::Text("\tP2_maxHP: %d", Containers::gameVals.P2CharObjPointer == 0 ? -1 : Containers::gameVals.P2CharObjPointer->maxHP);
+		ImGui::Text("\tP1_xPos: %d", Containers::gameVals.P1CharObjPointer == 0 ? -1 : Containers::gameVals.P1CharObjPointer->xPos);
+		ImGui::Text("\tP1_yPos: %d", Containers::gameVals.P1CharObjPointer == 0 ? -1 : Containers::gameVals.P1CharObjPointer->yPos);
+		ImGui::Text("\tP2_xPos: %d", Containers::gameVals.P2CharObjPointer == 0 ? -1 : Containers::gameVals.P2CharObjPointer->xPos);
+		ImGui::Text("\tP2_yPos: %d", Containers::gameVals.P2CharObjPointer == 0 ? -1 : Containers::gameVals.P2CharObjPointer->yPos);
+		ImGui::Text("\tP1_effectPointer: %d", Containers::gameVals.P1CharObjPointer == 0 ? -1 : Containers::gameVals.P1CharObjPointer->effectPointer);
+		ImGui::Text("\tP2_effectPointer: %d", Containers::gameVals.P2CharObjPointer == 0 ? -1 : Containers::gameVals.P2CharObjPointer->effectPointer);
 		ImGui::Text("\tP1_selected_custom_pal: %d", Containers::gameVals.P1_selected_custom_pal);
 		ImGui::Text("\tP2_selected_custom_pal: %d", Containers::gameVals.P2_selected_custom_pal);
 		ImGui::Text("\tP1PaletteIndex:");

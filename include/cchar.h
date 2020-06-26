@@ -30,7 +30,12 @@ public:
 	char pad_01C8[20]; //0x01C8
 	int32_t some_distortion_timer; //0x01DC
 	int32_t is_doing_distortion; //0x01E0
-	char pad_01E4[676]; //0x01E4
+	char pad_01E4[72]; //0x01E4
+	char32_t effectPointer; //0x022C
+	char pad_0230[56]; //0x0230
+	int32_t xPos; //0x0268
+	int32_t yPos; //0x026C
+	char pad_0270[536]; //0x0270
 	int32_t heat_usage_type; //0x0488
 	char pad_048C[1348]; //0x048C
 	int32_t previousHP; //0x09D0
