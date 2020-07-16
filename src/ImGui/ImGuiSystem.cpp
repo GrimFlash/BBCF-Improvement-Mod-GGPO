@@ -611,6 +611,11 @@ void ImGuiSystem::ShowDebugWindow(bool* p_open)
 	if (pressed)
 		show_save_load_state_window ^= 1;
 
+	if (ImGui::Button("Force VS mode"))
+	{
+		game::ForceVersusMode();
+	}
+
 	ImGui::End();
 }
 
