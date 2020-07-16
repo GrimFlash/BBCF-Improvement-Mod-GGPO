@@ -264,6 +264,12 @@ namespace pointer_offsets {
     static const unsigned int player1   = 0x819DF0;
     static const unsigned int player2   = 0xDC204C;
 
+    static const unsigned int MainMenuCategory = 0xE19EB0;
+    static const unsigned int BattleHighlightedMode = 0xE14158;
+    static const unsigned int ModeSelection = 0xE133A0;
+    static const unsigned int SelectedPlayer1 = 0xE19F3C;
+    static const unsigned int SelectedPlayer2 = 0xE19F40;
+
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
         static const std::array<unsigned int, 1> xpos   = { 0x268 };
@@ -360,6 +366,36 @@ static void LoadGameState(SavedGameState const& game_state)
     auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
     std::memcpy((unsigned char*)p1_dref, gP1Data->data(), 0x214C4);
     std::memcpy((unsigned char*)p2_dref, gP2Data->data(), 0x214C4);
+}
+
+static void ForceVersusMode()
+{
+    DWORD pid;
+    auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
+    DWORD MainMenuCategory = (base + pointer_offsets::MainMenuCategory);
+    DWORD ModeSelection = (base + pointer_offsets::ModeSelection);
+    DWORD BattleHighlightedMode = (base + pointer_offsets::BattleHighlightedMode);
+    DWORD SelectedPlayer1 = (base + pointer_offsets::SelectedPlayer1);
+    DWORD SelectedPlayer2 = (base + pointer_offsets::SelectedPlayer2);
+  
+    int MainMenuCategoryValue = 2;
+    int BattleHighlightedModeValue = 1;
+    int ModeSelectionValue = 19;
+
+    int SelectedPlayer1Value = 0;
+    int SelectedPlayer2Value = 1;
+    //Reminder to self - When you start working on online connectivity, you'll need to put these two ints in a conditional
+
+    HWND hWnd = FindWindowA(0, ("BLAZBLUE CENTRALFICTION"));
+
+    GetWindowThreadProcessId(hWnd, &pid);
+    HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+
+    WriteProcessMemory(pHandle, (LPVOID)MainMenuCategory, &MainMenuCategoryValue, sizeof(MainMenuCategoryValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)BattleHighlightedMode, &BattleHighlightedModeValue, sizeof(BattleHighlightedModeValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)ModeSelection, &ModeSelectionValue, sizeof(ModeSelectionValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)SelectedPlayer1, &SelectedPlayer1Value, sizeof(SelectedPlayer1Value), 0);
+    WriteProcessMemory(pHandle, (LPVOID)SelectedPlayer2, &SelectedPlayer2Value, sizeof(SelectedPlayer2Value), 0);
 }
 
 /*
