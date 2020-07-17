@@ -269,6 +269,9 @@ namespace pointer_offsets {
     static const unsigned int ModeSelection = 0xE133A0;
     static const unsigned int SelectedPlayer1 = 0xE19F3C;
     static const unsigned int SelectedPlayer2 = 0xE19F40;
+    static const unsigned int VersusRounds = 0x87FA14;
+    static const unsigned int VersusTimeLimit = 0x87FA20;
+    static const unsigned int ActSetting = 0x88B594;
 
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
@@ -375,12 +378,19 @@ static void ForceVersusMode()
     DWORD MainMenuCategory = (base + pointer_offsets::MainMenuCategory);
     DWORD ModeSelection = (base + pointer_offsets::ModeSelection);
     DWORD BattleHighlightedMode = (base + pointer_offsets::BattleHighlightedMode);
+    DWORD VersusRounds = (base + pointer_offsets::VersusRounds);
+    DWORD VersusTimeLimit = (base + pointer_offsets::VersusTimeLimit);
+    DWORD ActSetting = (base + pointer_offsets::ActSetting);
     DWORD SelectedPlayer1 = (base + pointer_offsets::SelectedPlayer1);
     DWORD SelectedPlayer2 = (base + pointer_offsets::SelectedPlayer2);
+
   
     int MainMenuCategoryValue = 2;
     int BattleHighlightedModeValue = 1;
     int ModeSelectionValue = 19;
+    int VersusRoundsValue = 1;
+    int VersusTimeLimitValue = 4;
+    int ActSettingValue = 2;
 
     int SelectedPlayer1Value = 0;
     int SelectedPlayer2Value = 1;
@@ -394,6 +404,9 @@ static void ForceVersusMode()
     WriteProcessMemory(pHandle, (LPVOID)MainMenuCategory, &MainMenuCategoryValue, sizeof(MainMenuCategoryValue), 0);
     WriteProcessMemory(pHandle, (LPVOID)BattleHighlightedMode, &BattleHighlightedModeValue, sizeof(BattleHighlightedModeValue), 0);
     WriteProcessMemory(pHandle, (LPVOID)ModeSelection, &ModeSelectionValue, sizeof(ModeSelectionValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)VersusRounds, &VersusRoundsValue, sizeof(VersusRoundsValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)VersusTimeLimit, &VersusTimeLimitValue, sizeof(VersusTimeLimitValue), 0);
+    WriteProcessMemory(pHandle, (LPVOID)ActSetting, &ActSettingValue, sizeof(ActSettingValue), 0);
     WriteProcessMemory(pHandle, (LPVOID)SelectedPlayer1, &SelectedPlayer1Value, sizeof(SelectedPlayer1Value), 0);
     WriteProcessMemory(pHandle, (LPVOID)SelectedPlayer2, &SelectedPlayer2Value, sizeof(SelectedPlayer2Value), 0);
 }
