@@ -263,10 +263,8 @@ namespace pointer_offsets {
     static const unsigned int time      = 0xDA0CE8;
     static const unsigned int player1   = 0x819DF0;
     static const unsigned int player2   = 0xDC204C;
-    static const unsigned int XscreenScroll1 = 0xDC20EC;
-    static const unsigned int XscreenScroll2 = 0xDC2130;
-    static const unsigned int YscreenScroll1 = 0xDC20F0;
-    static const unsigned int YscreenScroll2 = 0xDC2134;
+    static const unsigned int XscreenScroll = 0xDC2130;
+    static const unsigned int YscreenScroll = 0xDC2134;
 
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
@@ -333,9 +331,7 @@ static SavedGameState SaveGameState()
 
     if (gGameState) {
         game_state.time = *gGameState->time;
-        game_state.XscreenScroll1 = *gGameState->XscreenScroll1;
         game_state.XscreenScroll2 = *gGameState->XscreenScroll2;
-        game_state.YscreenScroll1 = *gGameState->YscreenScroll1;
         game_state.YscreenScroll2 = *gGameState->YscreenScroll2;
         /*
         game_state.p1.health = *gGameState->player1.health;
@@ -354,11 +350,9 @@ static SavedGameState SaveGameState()
     auto p2_ref= (uintptr_t*)(base + pointer_offsets::player2);
     auto p2_dref = *p2_ref;
 
-    auto Xscreen_scroll_1_ref = (uintptr_t*)(base + pointer_offsets::XscreenScroll1);
-    auto Xscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::XscreenScroll2);
-    auto Yscreen_scroll_1_ref = (uintptr_t*)(base + pointer_offsets::YscreenScroll1);
-    auto Yscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::YscreenScroll2);
-    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref,Xscreen_scroll_1_ref,Xscreen_scroll_2_ref,Yscreen_scroll_1_ref,Yscreen_scroll_2_ref);
+    auto Xscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::XscreenScroll);
+    auto Yscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::YscreenScroll);
+    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref,Xscreen_scroll_2_ref,Yscreen_scroll_2_ref);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
     return game_state;
@@ -368,9 +362,7 @@ static void LoadGameState(SavedGameState const& game_state)
 {
     if (gGameState) {
         *gGameState->time = game_state.time;
-        *gGameState->XscreenScroll1 = game_state.XscreenScroll1;
         *gGameState->XscreenScroll2 = game_state.XscreenScroll2;
-        *gGameState->YscreenScroll1 = game_state.YscreenScroll1;
         *gGameState->YscreenScroll2 = game_state.YscreenScroll2;
 
         /**gGameState->player1.health = game_state.p1.health;
