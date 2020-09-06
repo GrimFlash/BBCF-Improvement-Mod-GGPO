@@ -263,6 +263,8 @@ namespace pointer_offsets {
     static const unsigned int time      = 0xDA0CE8;
     static const unsigned int player1   = 0x819DF0;
     static const unsigned int player2   = 0xDC204C;
+    static const unsigned int XscreenScroll = 0xDC2130;
+    static const unsigned int YscreenScroll = 0xDC2134;
 
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
@@ -285,6 +287,10 @@ typedef struct GameState {
    //Camera values
 
    int* time;
+   int* XscreenScroll1;
+   int* XscreenScroll2;
+   int* YscreenScroll1;
+   int* YscreenScroll2;
    PlayerData player1;
    PlayerData player2;
 
@@ -310,6 +316,10 @@ typedef struct SavedGameState {
     };
 
     int time;
+    int XscreenScroll1;
+    int XscreenScroll2;
+    int YscreenScroll1;
+    int YscreenScroll2;
     Player p1;
     Player p2;
 
@@ -321,6 +331,8 @@ static SavedGameState SaveGameState()
 
     if (gGameState) {
         game_state.time = *gGameState->time;
+        game_state.XscreenScroll2 = *gGameState->XscreenScroll2;
+        game_state.YscreenScroll2 = *gGameState->YscreenScroll2;
         /*
         game_state.p1.health = *gGameState->player1.health;
         game_state.p1.x_pos = *gGameState->player1.x_pos;
@@ -332,11 +344,15 @@ static SavedGameState SaveGameState()
     }
     
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
+
     auto p1_ref= (uintptr_t*)(base + pointer_offsets::player1);
     auto p1_dref = *p1_ref;
     auto p2_ref= (uintptr_t*)(base + pointer_offsets::player2);
     auto p2_dref = *p2_ref;
-    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref);
+
+    auto Xscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::XscreenScroll);
+    auto Yscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::YscreenScroll);
+    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref,Xscreen_scroll_2_ref,Yscreen_scroll_2_ref);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
     return game_state;
@@ -346,6 +362,8 @@ static void LoadGameState(SavedGameState const& game_state)
 {
     if (gGameState) {
         *gGameState->time = game_state.time;
+        *gGameState->XscreenScroll2 = game_state.XscreenScroll2;
+        *gGameState->YscreenScroll2 = game_state.YscreenScroll2;
 
         /**gGameState->player1.health = game_state.p1.health;
         *gGameState->player1.x_pos = game_state.p1.x_pos;
@@ -356,10 +374,13 @@ static void LoadGameState(SavedGameState const& game_state)
         *gGameState->player2.y_pos = game_state.p2.y_pos;*/
     }
     auto base = (uintptr_t)Containers::gameProc.hBBCFGameModule;
+
     auto p1_dref = *(uintptr_t*)(base + pointer_offsets::player1);
     auto p2_dref = *(uintptr_t*)(base + pointer_offsets::player2);
+
     std::memcpy((unsigned char*)p1_dref, gP1Data->data(), 0x214C4);
     std::memcpy((unsigned char*)p2_dref, gP2Data->data(), 0x214C4);
+
 }
 
 /*
