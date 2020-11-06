@@ -40,13 +40,14 @@ std::string uint_to_hex(unsigned int i)
 		<< std::hex << i;
 	return stream.str();
 }
-void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* XScreenScroll, uintptr_t* YScreenScroll, uintptr_t* objectData[])
+void logGameState(uintptr_t* time, uintptr_t* p1, uintptr_t* p2, uintptr_t* XScreenScroll, uintptr_t* YScreenScroll, uintptr_t* CameraZoom, uintptr_t* objectData[])
 {
 	fprintf(g_oFile, ("Time Address: "+uint_to_hex((unsigned int)time) + " Value: "+ std::to_string(*time) +"\n").c_str());
 	fprintf(g_oFile, ("P1 Address: " + uint_to_hex((unsigned int)p1) + " Value: " + uint_to_hex(*p1) + "\n").c_str());
 	fprintf(g_oFile, ("P2 Address: " + uint_to_hex((unsigned int)p2) + " Value: " + uint_to_hex(*p2) + "\n").c_str());
-	fprintf(g_oFile, ("X Screen Scroll 2 Address: " + uint_to_hex((unsigned int)XScreenScroll) + " Value: " + std::to_string(*XScreenScroll) + "\n").c_str());
-	fprintf(g_oFile, ("Y Screen Scroll 2 Address: " + uint_to_hex((unsigned int)YScreenScroll) + " Value: " + std::to_string(*YScreenScroll) + "\n").c_str());
+	fprintf(g_oFile, ("X Screen Scroll Address: " + uint_to_hex((unsigned int)XScreenScroll) + " Value: " + std::to_string(*XScreenScroll) + "\n").c_str());
+	fprintf(g_oFile, ("Y Screen Scroll Address: " + uint_to_hex((unsigned int)YScreenScroll) + " Value: " + std::to_string(*YScreenScroll) + "\n").c_str());
+	fprintf(g_oFile, ("Camera Zoom Address: " + uint_to_hex((unsigned int)CameraZoom) + " Value: " + std::to_string(*CameraZoom) + "\n").c_str());
 	fflush(g_oFile);
 }
 
