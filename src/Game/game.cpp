@@ -67,8 +67,9 @@ void InitGameStatePointers()
 
     gGameState->time = (int*)(base + pointer_offsets::time);
 
-    gGameState->XscreenScroll2 = (int*)(base + pointer_offsets::XscreenScroll);
-    gGameState->YscreenScroll2 = (int*)(base + pointer_offsets::YscreenScroll);
+    gGameState->XscreenScroll = (int*)(base + pointer_offsets::XscreenScroll);
+    gGameState->YscreenScroll = (int*)(base + pointer_offsets::YscreenScroll);
+    gGameState->CameraZoom = (int*)(base + pointer_offsets::CameraZoom);
 
     GetPlayerPointers(base + pointer_offsets::player1, gGameState->player1, "Player 1");
     GetPlayerPointers(base + pointer_offsets::player2, gGameState->player2, "Player 2");
