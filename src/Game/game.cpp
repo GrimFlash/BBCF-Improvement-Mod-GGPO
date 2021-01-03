@@ -71,6 +71,9 @@ void InitGameStatePointers()
     gGameState->YscreenScroll = (int*)(base + pointer_offsets::YscreenScroll);
     gGameState->CameraZoom = (int*)(base + pointer_offsets::CameraZoom);
 
+    gGameState->DistortionBackground = (int*)(base + pointer_offsets::DistortionBackground);
+    gGameState->DistortionFadeInOut = (int*)(base + pointer_offsets::DistortionFadeInOut);
+
     GetPlayerPointers(base + pointer_offsets::player1, gGameState->player1, "Player 1");
     GetPlayerPointers(base + pointer_offsets::player2, gGameState->player2, "Player 2");
 }
