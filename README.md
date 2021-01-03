@@ -49,8 +49,8 @@ standard- including this project.
 Authors
 
 * @GrimFlash - founder
-* JoeS
 * DaInfamoose
+* JoeS
 
 ## License
 This project is licensed under the MIT License -
