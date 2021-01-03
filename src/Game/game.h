@@ -23,9 +23,6 @@ const unsigned short MAX_BARRIER = <put value here>;
 const unsigned short MIN_BARRIER = <put value here>;
 const short MIN_NEGATIVE_PENALTY = 0;
 const short MAX_NEGATIVE_PENALTY = <put value here> ;
-
-For the burst and barrier values, i'm not 100% sure if they are signed or not. If they are, just remove "unsigned" next to them - Grim
-(Feel Free to delete this comment when we confirm it)
 */
 
 /*
@@ -108,17 +105,10 @@ typedef struct SavedGameState SavedGameState;
 
 typedef struct PlayerData {
 
-    /*
-    Here we will need to put in stuff related to characters, ranging
-    from current heat to character specific stuff (i.e Susan seals)
-    */
-
     int* health;
 
     int* x_pos;
     int* y_pos;
-
-    //enum PlayerDataAllowedNormals allowedNormals;
 
 } PlayerData;
 
@@ -136,8 +126,6 @@ typedef struct ClientSynchronizationRequest {
 
 } ClientSynchronizationRequest;
 
-
-
 typedef struct ServerSynchronizationResponse {
 
     unsigned short nPort;
@@ -146,21 +134,10 @@ typedef struct ServerSynchronizationResponse {
 
 } ServerSynchronizationResponse;
 
-
-
 typedef struct CharacterSelection {
     char* name;
     int value;
 } CharacterSelection;
-
-/*
-static CharacterSelection CHARACTERS[] = {
-    {"Charactername here", <hexadecimal # here>},
-
-    repeat for every character
- 
-};
-*/
 
 typedef struct StageSelection {
     char* name;
@@ -210,8 +187,6 @@ typedef struct GGPOState {
     int nFramesAhead;
 
 } GGPOState;
-
-
 
 typedef struct SessionInitiationState {
 
@@ -263,9 +238,13 @@ namespace pointer_offsets {
     static const unsigned int time      = 0xDA0CE8;
     static const unsigned int player1   = 0x819DF0;
     static const unsigned int player2   = 0xDC204C;
+
     static const unsigned int XscreenScroll = 0xDC2130;
     static const unsigned int YscreenScroll = 0xDC2134;
     static const unsigned int CameraZoom = 0xDC20B0;
+
+    static const unsigned int DistortionBackground = 0xD3587C;
+    static const unsigned int DistortionFadeInOut = 0xDA0F44;
 
     namespace player_common {
         static const std::array<unsigned int, 1> health = { 0x9D4 };
@@ -276,27 +255,21 @@ namespace pointer_offsets {
 
 typedef struct GameState {
 
-    //int nFramesToSkipRender;
-    //int nFramesSkipped;
+    int nFramesToSkipRender;
+    int nFramesSkipped;
     //int lastSecondNumFramesSimulated;
 
    //GGPOState ggpoState;
    //SessionInitiationState sessionInitState;
 
-   //Struct definitons for GameObjectData
-
-   //Camera values
-
    int* time;
    int* XscreenScroll;
    int* YscreenScroll;
    int* CameraZoom;
+   int* DistortionBackground;
+   int* DistortionFadeInOut;
    PlayerData player1;
    PlayerData player2;
-
-   //Will update this more as I get a clearer idea on what exactly we'll need
-
- 
 
 } GameState;
 
@@ -319,6 +292,8 @@ typedef struct SavedGameState {
     int XscreenScroll;
     int YscreenScroll;
     int CameraZoom;
+    int DistortionBackground;
+    int DistortionFadeInOut;
     Player p1;
     Player p2;
 
@@ -333,6 +308,8 @@ static SavedGameState SaveGameState()
         game_state.XscreenScroll = *gGameState->XscreenScroll;
         game_state.YscreenScroll = *gGameState->YscreenScroll;
         game_state.CameraZoom = *gGameState->CameraZoom;
+        game_state.DistortionBackground = *gGameState->DistortionBackground;
+        game_state.DistortionFadeInOut = *gGameState->DistortionFadeInOut;
         /*
         game_state.p1.health = *gGameState->player1.health;
         game_state.p1.x_pos = *gGameState->player1.x_pos;
@@ -353,7 +330,11 @@ static SavedGameState SaveGameState()
     auto Xscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::XscreenScroll);
     auto Yscreen_scroll_2_ref = (uintptr_t*)(base + pointer_offsets::YscreenScroll);
     auto Camera_zoom_ref = (uintptr_t*)(base + pointer_offsets::CameraZoom);
-    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref,Xscreen_scroll_2_ref,Yscreen_scroll_2_ref,Camera_zoom_ref);
+
+    auto Distortion_background = (uintptr_t*)(base + pointer_offsets::DistortionBackground);
+    auto Distortion_fade_in_out = (uintptr_t*)(base + pointer_offsets::DistortionFadeInOut);
+
+    logGameState((uintptr_t*)(base + pointer_offsets::time),p1_ref,p2_ref,Xscreen_scroll_2_ref,Yscreen_scroll_2_ref,Camera_zoom_ref, Distortion_background);
     std::memcpy(gP1Data->data(), (unsigned char*)(p1_dref), 0x214C4);
     std::memcpy(gP2Data->data(), (unsigned char*)(p2_dref), 0x214C4);
     return game_state;
@@ -366,6 +347,8 @@ static void LoadGameState(SavedGameState const& game_state)
         *gGameState->XscreenScroll = game_state.XscreenScroll;
         *gGameState->YscreenScroll = game_state.YscreenScroll;
         *gGameState->CameraZoom = game_state.CameraZoom;
+        *gGameState->DistortionBackground = game_state.DistortionBackground;
+        *gGameState->DistortionFadeInOut = game_state.DistortionFadeInOut;
 
         /**gGameState->player1.health = game_state.p1.health;
         *gGameState->player1.x_pos = game_state.p1.x_pos;
