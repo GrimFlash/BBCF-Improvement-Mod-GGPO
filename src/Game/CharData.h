@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-// Generated using ReClass 2015
+// Created with ReClass.NET
 
 class CharData
 {
@@ -79,5 +79,5 @@ public:
 	int32_t Drive2; //0x20130
 	char pad_20134[32]; //0x20134
 	int32_t Drive3; //0x20154
-	char pad_20158[4972]; //0x20158
-}; //Size: 0x214C4
+	char pad_20158[18464]; //0x20158
+}; //Size: 0x24978
