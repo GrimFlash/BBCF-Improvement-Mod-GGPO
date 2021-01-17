@@ -1,5 +1,7 @@
-#include "../../include/SteamApiWrapper/SteamUserStatsWrapper.h"
-#include "../../include/utils.h"
+#include "SteamUserStatsWrapper.h"
+
+#include "Core/logger.h"
+#include "Core/utils.h"
 
 SteamUserStatsWrapper::SteamUserStatsWrapper(ISteamUserStats** pSteamUserStats)
 {
@@ -8,7 +10,7 @@ SteamUserStatsWrapper::SteamUserStatsWrapper(ISteamUserStats** pSteamUserStats)
 
 	m_SteamUserStats = *pSteamUserStats;
 	void* thisAddress = this;
-	WriteToMemory((uintptr_t)pSteamUserStats, (char*)&thisAddress, 4); //basically *pSteamUserStats = this;
+	WriteToProtectedMemory((uintptr_t)pSteamUserStats, (char*)&thisAddress, 4); //basically *pSteamUserStats = this;
 
 	LOG(7, "\t- after: *pSteamUserStats: 0x%p, m_SteamUserStats: 0x%p\n", *pSteamUserStats, m_SteamUserStats);
 }

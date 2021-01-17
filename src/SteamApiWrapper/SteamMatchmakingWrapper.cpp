@@ -1,7 +1,9 @@
-#include "../../include/SteamApiWrapper/SteamMatchmakingWrapper.h"
-#include "../../include/utils.h"
-#include "../../include/containers.h"
-#include "../../include/gamestates_defines.h"
+#include "SteamMatchmakingWrapper.h"
+
+#include "Core/interfaces.h"
+#include "Core/logger.h"
+#include "Core/utils.h"
+#include "Game/gamestates.h"
 
 SteamMatchmakingWrapper::SteamMatchmakingWrapper(ISteamMatchmaking** pSteamMatchmaking)
 {
@@ -10,7 +12,7 @@ SteamMatchmakingWrapper::SteamMatchmakingWrapper(ISteamMatchmaking** pSteamMatch
 
 	m_SteamMatchmaking = *pSteamMatchmaking;
 	void* thisAddress = this;
-	WriteToMemory((uintptr_t)pSteamMatchmaking, (char*)&thisAddress, 4); //basically *pSteamMatchmaking = this;
+	WriteToProtectedMemory((uintptr_t)pSteamMatchmaking, (char*)&thisAddress, 4); //basically *pSteamMatchmaking = this;
 
 	LOG(2, "\t- after: *pSteamMatchmaking: 0x%p, m_SteamMatchmaking: 0x%p\n", *pSteamMatchmaking, m_SteamMatchmaking);
 }
@@ -89,13 +91,11 @@ void SteamMatchmakingWrapper::AddRequestLobbyListDistanceFilter(ELobbyDistanceFi
 		filter = k_ELobbyDistanceFilterDefault;
 		break;
 	}
-	if (eLobbyDistanceFilter != filter)
-	{
 
-		LOG(7, "\teLobbyDistanceFilter modified from %d to %d\n", (int)eLobbyDistanceFilter, (int)filter);
-		return m_SteamMatchmaking->AddRequestLobbyListDistanceFilter(filter);
-	}
-	return m_SteamMatchmaking->AddRequestLobbyListDistanceFilter(eLobbyDistanceFilter);
+	if (eLobbyDistanceFilter != filter)
+		LOG(2, "\teLobbyDistanceFilter modified from %d to %d\n", (int)eLobbyDistanceFilter, (int)filter);
+
+	return m_SteamMatchmaking->AddRequestLobbyListDistanceFilter(filter);
 }
 
 void SteamMatchmakingWrapper::AddRequestLobbyListResultCountFilter(int cMaxResults)
@@ -125,7 +125,7 @@ SteamAPICall_t SteamMatchmakingWrapper::CreateLobby(ELobbyType eLobbyType, int c
 SteamAPICall_t SteamMatchmakingWrapper::JoinLobby(CSteamID steamIDLobby)
 {
 	LOG(7, "SteamMatchmakingWrapper JoinLobby\n");
-	LOG(7, "\tsteamIDLobby: 0x%x\n", steamIDLobby);
+	LOG(7, "\t- steamIDLobby: %llu\n", steamIDLobby.ConvertToUint64());
 	return m_SteamMatchmaking->JoinLobby(steamIDLobby);
 }
 
@@ -153,23 +153,20 @@ CSteamID SteamMatchmakingWrapper::GetLobbyMemberByIndex(CSteamID steamIDLobby, i
 	return m_SteamMatchmaking->GetLobbyMemberByIndex(steamIDLobby, iMember);
 }
 
-uint32 totalGetPackets = 0;
 const char* SteamMatchmakingWrapper::GetLobbyData(CSteamID steamIDLobby, const char *pchKey)
 {
 	LOG(7, "SteamMatchmakingWrapper GetLobbyData\n");
+
 	const char* ret = m_SteamMatchmaking->GetLobbyData(steamIDLobby, pchKey);
-	//totalGetPackets++;
-	//LOG(7, "\tcount: %d\n", totalGetPackets);
-	//LOG(7, "\tpchKey: %s\n", pchKey);
+
+	LOG(7, "\t- steamIDLobby: %llu, pchKey: %s, ret: %s\n", steamIDLobby.ConvertToUint64(), pchKey, ret);
+
 	return ret;
 }
 
-uint32 totalSetPackets = 0;
 bool SteamMatchmakingWrapper::SetLobbyData(CSteamID steamIDLobby, const char *pchKey, const char *pchValue)
 {
 	LOG(7, "SteamMatchmakingWrapper SetLobbyData\n");
-	//totalSetPackets++;
-	//LOG(7, "\tcount: %d\n", totalSetPackets);
 	return m_SteamMatchmaking->SetLobbyData(steamIDLobby, pchKey, pchValue);
 }
 
@@ -207,7 +204,12 @@ const char* SteamMatchmakingWrapper::GetLobbyMemberData(CSteamID steamIDLobby, C
 
 	//opponentPlayer = new CSteamID(steamIDRemote);
 
-	return m_SteamMatchmaking->GetLobbyMemberData(steamIDLobby, steamIDUser, pchKey);
+	const char* ret = m_SteamMatchmaking->GetLobbyMemberData(steamIDLobby, steamIDUser, pchKey);
+
+	LOG(7, "\t- steamIDLobby: %llu, steamIDUser: %llu, pchKey: %s, ret: %s\n",
+		steamIDLobby.ConvertToUint64(), steamIDUser.ConvertToUint64(), pchKey, ret);
+
+	return ret;
 }
 
 void SteamMatchmakingWrapper::SetLobbyMemberData(CSteamID steamIDLobby, const char *pchKey, const char *pchValue)
@@ -273,13 +275,6 @@ bool SteamMatchmakingWrapper::SetLobbyJoinable(CSteamID steamIDLobby, bool bLobb
 CSteamID SteamMatchmakingWrapper::GetLobbyOwner(CSteamID steamIDLobby)
 {
 	LOG(7, "SteamMatchmakingWrapper GetLobbyOwner\n");
-
-	//for (int i = 0; i < m_SteamMatchmaking->GetNumLobbyMembers(steamIDLobby); i++)
-	//{
-	//	CSteamID member = m_SteamMatchmaking->GetLobbyMemberByIndex(steamIDLobby, i);
-	//	LOG(7, "SteamLobbyMemberByIndex %d: 0x%x\n", i ,member);
-	//}
-
 	return m_SteamMatchmaking->GetLobbyOwner(steamIDLobby);
 }
 

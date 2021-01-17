@@ -1,5 +1,7 @@
-#include "../../include/SteamApiWrapper/SteamUserWrapper.h"
-#include "../../include/utils.h"
+#include "SteamUserWrapper.h"
+
+#include "Core/logger.h"
+#include "Core/utils.h"
 
 SteamUserWrapper::SteamUserWrapper(ISteamUser** pSteamUser)
 {
@@ -8,7 +10,7 @@ SteamUserWrapper::SteamUserWrapper(ISteamUser** pSteamUser)
 
 	m_SteamUser = *pSteamUser;
 	void* thisAddress = this;
-	WriteToMemory((uintptr_t)pSteamUser, (char*)&thisAddress, 4); //basically *pSteamUser = this;
+	WriteToProtectedMemory((uintptr_t)pSteamUser, (char*)&thisAddress, 4); //basically *pSteamUser = this;
 
 	LOG(7, "\t- after: *pSteamUser: 0x%p, m_SteamUser: 0x%p\n", *pSteamUser, m_SteamUser);
 }

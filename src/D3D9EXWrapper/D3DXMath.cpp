@@ -1,4 +1,9 @@
-#include "../../include/D3D9ExWrapper/D3DXMath.h"
+#include "D3DXMath.h"
+
+#include "d3d9.h"
+
+#include "Core/logger.h"
+
 #include <detours.h>
 
 #pragma comment(lib, "detours.lib")
@@ -131,14 +136,14 @@ void hookD3DMaths()
 	PBYTE pD3DXVec4Transform = (PBYTE)GetProcAddress(hM, "D3DXVec4Transform");
 	PBYTE pD3DXMatrixTransformation2D = (PBYTE)GetProcAddress(hM, "D3DXMatrixTransformation2D");
 
-	checkHookSuccess((PBYTE)pD3DXMatrixLookAtLH, "D3DXMatrixLookAtLH");
-	checkHookSuccess((PBYTE)pD3DXMatrixPerspectiveFovLH, "D3DXMatrixPerspectiveFovLH");
-	checkHookSuccess((PBYTE)pD3DXMatrixMultiply, "D3DXMatrixMultiply");
-	checkHookSuccess((PBYTE)pD3DXMatrixScaling, "D3DXMatrixScaling");
-	checkHookSuccess((PBYTE)pD3DXMatrixTranslation, "D3DXMatrixTranslation");
-	checkHookSuccess((PBYTE)pD3DXVec3TransformCoord, "D3DXVec3TransformCoord");
-	checkHookSuccess((PBYTE)pD3DXVec4Transform, "D3DXVec4Transform");
-	checkHookSuccess((PBYTE)pD3DXMatrixTransformation2D, "D3DXMatrixTransformation2D");
+	hookSucceeded((PBYTE)pD3DXMatrixLookAtLH, "D3DXMatrixLookAtLH");
+	hookSucceeded((PBYTE)pD3DXMatrixPerspectiveFovLH, "D3DXMatrixPerspectiveFovLH");
+	hookSucceeded((PBYTE)pD3DXMatrixMultiply, "D3DXMatrixMultiply");
+	hookSucceeded((PBYTE)pD3DXMatrixScaling, "D3DXMatrixScaling");
+	hookSucceeded((PBYTE)pD3DXMatrixTranslation, "D3DXMatrixTranslation");
+	hookSucceeded((PBYTE)pD3DXVec3TransformCoord, "D3DXVec3TransformCoord");
+	hookSucceeded((PBYTE)pD3DXVec4Transform, "D3DXVec4Transform");
+	hookSucceeded((PBYTE)pD3DXMatrixTransformation2D, "D3DXMatrixTransformation2D");
 
 	orig_D3DXMatrixLookAtLH = (D3DXMatrixLookAtLH_t)DetourFunction(pD3DXMatrixLookAtLH, (LPBYTE)hook_D3DXMatrixLookAtLH);
 	orig_D3DXMatrixPerspectiveFovLH = (D3DXMatrixPerspectiveFovLH_t)DetourFunction(pD3DXMatrixPerspectiveFovLH, (LPBYTE)hook_D3DXMatrixPerspectiveFovLH);

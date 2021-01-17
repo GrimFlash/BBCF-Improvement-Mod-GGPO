@@ -1,9 +1,16 @@
-#include "../../include/D3D9ExWrapper/ID3D9EXWrapper_Device.h"
-#include "../../include/ImGui/ImGuiSystem.h"
+#include "ID3D9EXWrapper_Device.h"
+
+#include "Core/interfaces.h"
+#include "Core/logger.h"
+#include "Game/MatchState.h"
+#include "Hooks/hooks_bbcf.h"
+#include "Hooks/hooks_customGameModes.h"
+#include "Hooks/hooks_palette.h"
+#include "Overlay/WindowManager.h"
+
 #include <steam_api.h>
+
 #pragma comment(lib, "steam_api.lib")
-#include "../../include/additional_hooks.h"
-#include "../../include/containers.h"
 
 Direct3DDevice9ExWrapper::Direct3DDevice9ExWrapper(IDirect3DDevice9Ex **ppReturnedDeviceInterface, D3DPRESENT_PARAMETERS *pPresentParam, IDirect3D9Ex *pIDirect3D9Ex)
 {
@@ -13,10 +20,12 @@ Direct3DDevice9ExWrapper::Direct3DDevice9ExWrapper(IDirect3DDevice9Ex **ppReturn
 	*ppReturnedDeviceInterface = this;
 	m_Direct3D9Ex = pIDirect3D9Ex;
 
-	//grab pointer
-	Containers::g_interfaces.pD3D9ExWrapper = *ppReturnedDeviceInterface;
+	g_interfaces.pD3D9ExWrapper = *ppReturnedDeviceInterface;
+
 	//place all other hooks that can only be placed after steamDRM unpacks the .exe in memory!!!
-	additional_hooks_manual();
+	placeHooks_bbcf();
+	placeHooks_palette();
+	placeHooks_CustomGameModes();
 }
 
 Direct3DDevice9ExWrapper::~Direct3DDevice9ExWrapper() {}
@@ -26,6 +35,7 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::QueryInterface(const IID &riid, void 
 	LOG(7, "QueryInterface\n");
 
 	HRESULT hRes = m_Direct3DDevice9Ex->QueryInterface(riid, ppvObj);
+
 	if (hRes == S_OK)
 		*ppvObj = this;
 	else
@@ -43,10 +53,12 @@ ULONG APIENTRY Direct3DDevice9ExWrapper::AddRef()
 ULONG APIENTRY Direct3DDevice9ExWrapper::Release()
 {
 	LOG(7, "Release\n");
+
 	ULONG res = m_Direct3DDevice9Ex->Release();
-	if (res == 0) {
+
+	if (res == 0)
 		delete this;
-	}
+
 	return res;
 }
 
@@ -71,9 +83,12 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::EvictManagedResources()
 HRESULT APIENTRY Direct3DDevice9ExWrapper::GetDirect3D(IDirect3D9** ppD3D9)
 {
 	LOG(7, "GetDirect3D\n");
+
 	HRESULT hRet = m_Direct3DDevice9Ex->GetDirect3D(ppD3D9);
+
 	if (SUCCEEDED(hRet))
 		*ppD3D9 = m_Direct3D9Ex;
+
 	return hRet;
 }
 
@@ -177,13 +192,7 @@ void APIENTRY Direct3DDevice9ExWrapper::GetGammaRamp(UINT iSwapChaiTn, D3DGAMMAR
 HRESULT APIENTRY Direct3DDevice9ExWrapper::CreateTexture(UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DTexture9** ppTexture, HANDLE* pSharedHandle)
 {
 	LOG(7, "CreateTexture %u %u %u\n", Width, Height, Levels);
-
-	HRESULT ret = m_Direct3DDevice9Ex->CreateTexture(Width, Height, Levels, Usage, Format, Pool, ppTexture, pSharedHandle);
-	//if (SUCCEEDED(ret))
-	//{
-	//	LOG(2, "CreateTexture %x %x %x\n", *ppTexture, &ppTexture, *&ppTexture);
-	//}
-	return ret;
+	return m_Direct3DDevice9Ex->CreateTexture(Width, Height, Levels, Usage, Format, Pool, ppTexture, pSharedHandle);
 }
 
 HRESULT APIENTRY Direct3DDevice9ExWrapper::CreateVolumeTexture(UINT Width, UINT Height, UINT Depth, UINT Levels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DVolumeTexture9** ppVolumeTexture, HANDLE* pSharedHandle)
@@ -248,13 +257,20 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::GetFrontBufferData(UINT iSwapChain, I
 
 HRESULT APIENTRY Direct3DDevice9ExWrapper::StretchRect(IDirect3DSurface9* pSourceSurface, CONST RECT* pSourceRect, IDirect3DSurface9* pDestSurface, CONST RECT* pDestRect, D3DTEXTUREFILTERTYPE Filter)
 {
+	LOG(7, "StretchRect\n");
+
 	if (pSourceRect)
+	{
 		LOG(7, "StretchRect 0x%p : %ld %ld -- 0x%p\n", pSourceRect, pSourceRect->right, pSourceRect->bottom, pDestRect);
+	}
+
 	if (Settings::settingsIni.viewport != 1)
 	{
 		LOG(7, "/t- modifying to %ld %ld\n", Settings::savedSettings.newSourceRect.right, Settings::savedSettings.newSourceRect.bottom);
+
 		return m_Direct3DDevice9Ex->StretchRect(pSourceSurface, &Settings::savedSettings.newSourceRect, pDestSurface, pDestRect, Filter);
 	}
+
 	return m_Direct3DDevice9Ex->StretchRect(pSourceSurface, pSourceRect, pDestSurface, pDestRect, Filter);
 }
 
@@ -319,92 +335,15 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::GetDepthStencilSurface(IDirect3DSurfa
 HRESULT APIENTRY Direct3DDevice9ExWrapper::BeginScene()
 {
 	LOG(7, "BeginScene\n");
-
-	ImGuiSystem::HandleImGuiWindows();
-
 	return m_Direct3DDevice9Ex->BeginScene();
-}
-
-struct hitbox_data
-{
-	bool isHurtbox;
-	float offFromOrigX;
-	float offFromOrigY;
-	float width;
-	float height;
-};
-
-#include "../../include/gamestates_defines.h"
-void draw_hitbox(IDirect3DDevice9Ex *m_Direct3DDevice9Ex, hitbox_data *hb, float flip)
-{
-	if (Containers::gameVals.P1ScreenPosX != 0 || Containers::gameVals.P1ScreenPosY != 0)
-	{
-		auto inner_color = D3DCOLOR_ARGB(255, 0, 0, 0);
-		auto outer_color = D3DCOLOR_ARGB(255, 0, 0, 0);
-
-		struct vertex
-		{
-			float x, y, z, rhw;
-			DWORD color;
-		};
-
-		float p1_x = *Containers::gameVals.P1ScreenPosX;
-		float p1_y = *Containers::gameVals.P1ScreenPosY;
-		D3DXVECTOR3 sp1, sp2, sp3, sp4;
-
-		sp1 = D3DXVECTOR3(p1_x - hb->offFromOrigX * flip, 0.F, p1_y - hb->offFromOrigY);
-		sp2 = D3DXVECTOR3(sp1.x + hb->width * flip, 0.F, sp1.y - hb->height);
-		sp3 = D3DXVECTOR3(sp2.x * flip, 0.F, sp2.y - hb->height);
-		sp4 = D3DXVECTOR3(sp1.x * flip, 0.F, sp1.y - hb->height);
-
-		m_Direct3DDevice9Ex->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-		m_Direct3DDevice9Ex->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		m_Direct3DDevice9Ex->SetPixelShader(nullptr);
-		m_Direct3DDevice9Ex->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-		m_Direct3DDevice9Ex->SetTexture(0, nullptr);
-
-		vertex vertices[] =
-		{
-			{ sp1.x, sp1.y, 0.F, 0.F, inner_color },
-			{ sp2.x, sp2.y, 0.F, 0.F, inner_color },
-			{ sp3.x, sp3.y, 0.F, 0.F, inner_color },
-			{ sp4.x, sp4.y, 0.F, 0.F, inner_color },
-		};
-
-		m_Direct3DDevice9Ex->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, vertices, sizeof(vertex));
-
-		vertex outline[] =
-		{
-			{ sp1.x, sp1.y, 0.F, 0.F, outer_color },
-			{ sp2.x, sp2.y, 0.F, 0.F, outer_color },
-			{ sp4.x, sp4.y, 0.F, 0.F, outer_color },
-			{ sp3.x, sp3.y, 0.F, 0.F, outer_color },
-			{ sp1.x, sp1.y, 0.F, 0.F, outer_color },
-		};
-
-		m_Direct3DDevice9Ex->DrawPrimitiveUP(D3DPT_LINESTRIP, 4, outline, sizeof(vertex));
-	}
 }
 
 HRESULT APIENTRY Direct3DDevice9ExWrapper::EndScene()
 {
 	LOG(7, "EndScene\n");
 
-	ImGuiSystem::Render();
-
-#ifndef RELEASE_VER
-	if (ImGuiSystem::DrawHitbox)
-	{
-		int hitboxes = Containers::gameVals.P1CharObjPointer->total_hitboxes;
-		hitbox_data *hd = (hitbox_data*)Containers::gameVals.P1CharObjPointer->collision_data;
-
-		for (int i = 0; i < hitboxes; i++)
-		{
-			draw_hitbox(m_Direct3DDevice9Ex, hd, 1.0f);
-			hd += sizeof(hitbox_data);
-		}
-	}
-#endif // !RELEASE_VER
+	MatchState::OnUpdate();
+	WindowManager::GetInstance().Render();
 
 	return m_Direct3DDevice9Ex->EndScene();
 }
@@ -418,47 +357,6 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::Clear(DWORD Count, CONST D3DRECT* pRe
 HRESULT APIENTRY Direct3DDevice9ExWrapper::SetTransform(D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX* pMatrix)
 {
 	LOG(7, "SetTransform %ld &pMatrix: 0x%p &*pMatrix: 0x%p pMatrix: 0x%p\n", State, &pMatrix, &*pMatrix, pMatrix);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pMatrix->_11, pMatrix->_12, pMatrix->_13, pMatrix->_14);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pMatrix->_21, pMatrix->_22, pMatrix->_23, pMatrix->_24);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pMatrix->_31, pMatrix->_32, pMatrix->_33, pMatrix->_34);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pMatrix->_41, pMatrix->_42, pMatrix->_43, pMatrix->_44);
-	//D3DMATRIX pproj;
-	//GetTransform(D3DTS_PROJECTION, &pproj);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._11, pproj._12, pproj._13, pproj._14);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._21, pproj._22, pproj._23, pproj._24);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._31, pproj._32, pproj._33, pproj._34);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._41, pproj._42, pproj._43, pproj._44);
-
-	//D3DXMATRIX ret;
-	//ZeroMemory(&ret, sizeof(ret));
-	//ret._11 = pMatrix->_11;
-	//ret._12 = pMatrix->_12;
-	//ret._13 = pMatrix->_13;
-	//ret._14 = pMatrix->_14;
-	//ret._21 = pMatrix->_21;
-	//ret._22 = pMatrix->_22;
-	//ret._23 = pMatrix->_23;
-	//ret._24 = pMatrix->_24;
-	//ret._31 = pMatrix->_31;
-	//ret._32 = pMatrix->_32;
-	//ret._33 = pMatrix->_33;
-	//ret._34 = pMatrix->_34;
-	//ret._41 = pMatrix->_41;//-1.5; //X (positive right, negative left)
-	//ret._42 = pMatrix->_42;//1.6; //Y (positive up, negative down)
-	//ret._43 = pMatrix->_43;
-	//ret._44 = pMatrix->_44;
-
-	////D3DXMatrixPerspectiveFovLH(&ret, D3DX_PI / 4, 1.0f, 1.0f, 100.0f);
-	////D3DXMatrixScaling(&ret, 1, 1, 0.0f);
-	//HRESULT retu = m_Direct3DDevice9Ex->SetTransform(State, &ret);
-
-	//GetTransform(D3DTS_PROJECTION, &pproj);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._11, pproj._12, pproj._13, pproj._14);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._21, pproj._22, pproj._23, pproj._24);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._31, pproj._32, pproj._33, pproj._34);
-	//LOG(7, "%.2f %.2f %,2 %,2\n", pproj._41, pproj._42, pproj._43, pproj._44);
-
-	//return retu;
 	return m_Direct3DDevice9Ex->SetTransform(State, pMatrix);
 }
 
@@ -483,14 +381,13 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::SetViewport(CONST D3DVIEWPORT9* pView
 		LOG(7, "MODIFYING VIEWPORT TO : %d %d\n", Settings::savedSettings.newViewport.Width, Settings::savedSettings.newViewport.Height);
 		return m_Direct3DDevice9Ex->SetViewport(&Settings::savedSettings.newViewport);
 	}
+
 	return m_Direct3DDevice9Ex->SetViewport(pViewport);
 }
 
 HRESULT APIENTRY Direct3DDevice9ExWrapper::GetViewport(D3DVIEWPORT9* pViewport)
 {
-	//static D3DVIEWPORT9 APVIEWPORT = {0, 0, 1024, 768, 0.0, 1.0};
 	HRESULT ret = m_Direct3DDevice9Ex->GetViewport(pViewport);
-	//pViewport = &APVIEWPORT;
 	LOG(7, "GetViewport %ld %ld %ld %ld 0x%p\n", pViewport->X, pViewport->Y, pViewport->Width, pViewport->Height, pViewport);
 
 	return ret;
@@ -619,14 +516,16 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::GetSamplerState(DWORD Sampler, D3DSAM
 HRESULT APIENTRY Direct3DDevice9ExWrapper::SetSamplerState(DWORD Sampler, D3DSAMPLERSTATETYPE Type, DWORD Value)
 {
 	LOG(7, "SetSamplerState\n");
+
 	if (Settings::settingsIni.viewport == 3)
 	{
 		if (Type == D3DSAMP_MINFILTER && Settings::savedSettings.isFiltering)
 		{
 			//Sampler = 2;
-			Value = D3DTEXF_LINEAR;//D3DTEXF_LINEAR;
+			Value = D3DTEXF_LINEAR; //D3DTEXF_LINEAR;
 		}
 	}
+
 	return m_Direct3DDevice9Ex->SetSamplerState(Sampler, Type, Value);
 }
 
@@ -1004,6 +903,7 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::CreateRenderTargetEx(UINT Width, UINT
 	if (Settings::settingsIni.viewport != 1)
 	{
 		LOG(3, "\t- modifying to %u %u\n", Settings::settingsIni.renderwidth, Settings::settingsIni.renderheight);
+
 		Settings::savedSettings.origViewportRes.x = (float)Width;
 		Settings::savedSettings.origViewportRes.y = (float)Height;
 		Settings::savedSettings.newViewport.MinZ = 0.0;
@@ -1014,6 +914,7 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::CreateRenderTargetEx(UINT Width, UINT
 
 	LOG(7, "SETTINGS\n - viewport %d\n - renderheight %d\n - renderheight %d\n",
 		Settings::settingsIni.viewport, Settings::settingsIni.renderheight, Settings::settingsIni.renderwidth);
+
 	LOG(7, " - SourceRect.right %u\n - SourceRect.bottom %u\n - Viewport.Width %d\n - Viewport.Height %d\n",
 		Settings::savedSettings.newSourceRect.right,
 		Settings::savedSettings.newSourceRect.bottom,
@@ -1040,10 +941,15 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::CreateDepthStencilSurfaceEx(UINT Widt
 	if (Settings::settingsIni.viewport != 1)
 	{
 		LOG(3, "\t- modifying to %u %u\n", Settings::settingsIni.renderwidth, Settings::settingsIni.renderheight);
-		return m_Direct3DDevice9Ex->CreateDepthStencilSurfaceEx(Settings::settingsIni.renderwidth, Settings::settingsIni.renderheight, Format, MultiSample, MultisampleQuality, Discard, ppSurface, pSharedHandle, Usage);
+		Width = Settings::settingsIni.renderwidth;
+		Height = Settings::settingsIni.renderheight;
 	}
 
-	return m_Direct3DDevice9Ex->CreateDepthStencilSurfaceEx(Width, Height, Format, MultiSample, MultisampleQuality, Discard, ppSurface, pSharedHandle, Usage);
+	HRESULT ret = m_Direct3DDevice9Ex->CreateDepthStencilSurfaceEx(Width, Height, Format, MultiSample, MultisampleQuality, Discard, ppSurface, pSharedHandle, Usage);
+
+	LOG(2, "\t- HRESULT: %ld\n", ret);
+
+	return ret;
 }
 
 HRESULT APIENTRY Direct3DDevice9ExWrapper::ResetEx(D3DPRESENT_PARAMETERS* pPresentationParameters, D3DDISPLAYMODEEX *pFullscreenDisplayMode)
@@ -1053,11 +959,11 @@ HRESULT APIENTRY Direct3DDevice9ExWrapper::ResetEx(D3DPRESENT_PARAMETERS* pPrese
 	Settings::applySettingsIni(pPresentationParameters);
 	logD3DPParams(pPresentationParameters, false);
 
-	ImGuiSystem::InvalidateDeviceObjects();
+	WindowManager::GetInstance().InvalidateDeviceObjects();
 
 	HRESULT ret = m_Direct3DDevice9Ex->ResetEx(pPresentationParameters, pFullscreenDisplayMode);
 
-	ImGuiSystem::CreateDeviceObjects();
+	WindowManager::GetInstance().CreateDeviceObjects();
 
 	return ret;
 }
