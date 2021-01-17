@@ -94,7 +94,7 @@ void MainWindow::DrawUtilButtons() const
 		m_pWindowContainer->GetWindow(WindowType_Debug)->ToggleOpen();
 	}
 
-	if (ImGui::Button("Save/Load state"))
+	if (ImGui::Button("Save/Load state", ImVec2(120, 20)))
 	{
 		m_pWindowContainer->GetWindow(WindowType_SaveLoadState)->ToggleOpen();
 	}
