@@ -5,6 +5,7 @@
 #include "Overlay/Window/PaletteEditorWindow.h"
 #include "Overlay/WindowContainer/WindowType.h"
 #include "Overlay/WindowManager.h"
+#include "Rollback/SavedGameState.h"
 
 void MatchState::OnMatchInit()
 {
@@ -50,6 +51,8 @@ void MatchState::OnMatchInit()
 	g_gameVals.isFrameFrozen = false;
 
 	WindowManager::GetInstance().GetWindowContainer()->GetWindow<PaletteEditorWindow>(WindowType_PaletteEditor)->OnMatchInit();
+
+	initGameStateAddresses();
 }
 
 void MatchState::OnMatchRematch()

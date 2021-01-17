@@ -208,7 +208,9 @@ HWND WINAPI hook_CreateWindowExW(DWORD dwExStyle, LPCWSTR lpClassName, LPCWSTR l
 		if (counter == 2) // 2nd created window should be the correct one according to process hacker
 		{
 			LOG(2, "Correct window: 0x%p\n", hWnd);
+			LOG(2, "BBCF.exe module handle: 0x%p\n", hInstance);
 			g_gameProc.hWndGameWindow = hWnd;
+			g_gameProc.hBBCFGameModule = hInstance;
 		}
 	}
 	counter++;

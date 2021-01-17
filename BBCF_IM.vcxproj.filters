@@ -135,6 +135,7 @@
     <ClCompile Include="src\Overlay\Widget\GameModeSelectWidget.cpp" />
     <ClCompile Include="src\Overlay\Widget\ActiveGameModeWidget.cpp" />
     <ClCompile Include="src\Overlay\Window\SaveLoadWindow.cpp" />
+    <ClCompile Include="src\Rollback\SavedGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="depends\imgui\imgui.h" />
@@ -251,6 +252,7 @@
     <ClInclude Include="src\Overlay\Widget\GameModeSelectWidget.h" />
     <ClInclude Include="src\Overlay\Widget\ActiveGameModeWidget.h" />
     <ClInclude Include="src\Overlay\Window\SaveLoadWindow.h" />
+    <ClInclude Include="src\Rollback\SavedGameState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def">

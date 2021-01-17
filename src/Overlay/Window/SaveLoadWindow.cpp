@@ -1,8 +1,10 @@
-#include "SaveLoadWindow.h"
+﻿#include "SaveLoadWindow.h"
 
 #include "Core/interfaces.h"
+#include "Core/logger.h"
 #include "Game/gamestates.h"
-
+#include "Overlay/imgui_utils.h"
+#include "Rollback/SavedGameState.h"
 
 void SaveLoadWindow::Draw() 
 {
@@ -14,28 +16,27 @@ void SaveLoadWindow::DrawSaveLoadStateWindow()
 	if (!isSaveLoadStateEnabledInCurrentState())
 		return;
 	
-	//static SavedGameState savedState;
+	const int nMinSkip = 0;
+	const int nMaxSkip = 60;
 	static int nFramesToSkipRender = 0;
-	static int nMinSkip = 0;
-	static int nMaxSkip = 60;
 	static int nFrameStep = 1;
+	static SavedGameState gameState = {};
 
-	if (nFramesToSkipRender < 0) {
-		nFramesToSkipRender = 0;
-	}
-	else if (nFramesToSkipRender > 60) {
-		nFramesToSkipRender = 60;
-	}
+	ImGui::SliderInt("Num of frames to skip", &nFramesToSkipRender, nMinSkip, nMaxSkip);
 
-	ImGui::InputInt("Num of frames to skip", &nFramesToSkipRender);
+	ImGui::VerticalSpacing(10);
 
-	if (ImGui::Button("Save")) {
+	if (ImGui::Button("Save", ImVec2(50, 25))) {
+		saveGameState(gameState);
 
 		//savedState = SaveGameState();
-
 	}
 
-	if (ImGui::Button("Load")) {
+	ImGui::SameLine();
+
+	if (ImGui::Button("Load", ImVec2(50, 25))) {
+		loadGameState(gameState);
+
 		//LoadGameState(savedState);
 		/*
 		lpGameState->nFramesSkipped = 0;
