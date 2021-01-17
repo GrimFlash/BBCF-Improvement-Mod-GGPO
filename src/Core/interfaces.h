@@ -93,6 +93,7 @@ struct gameVals_t
 struct gameProc_t
 {
 	HWND hWndGameWindow;
+	HMODULE hBBCFGameModule;
 };
 
 //temporary placeholders until wrappers are created / final addresses updated
