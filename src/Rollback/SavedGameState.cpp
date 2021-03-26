@@ -10,6 +10,7 @@ namespace pointer_offsets
 	const unsigned int cameraZoomPtrOffset              = 0xDC20B0;
 	const unsigned int distortionBackgroundPtrOffset    = 0xD3587C;
 	const unsigned int distortionFadeInOutPtrOffset     = 0xDA0F44;
+	const unsigned int prngOffset						= 0x59BC30;
 }
 
 namespace pointer_addresses
@@ -20,8 +21,13 @@ namespace pointer_addresses
 	int* pCameraZoom           = 0;
 	int* pDistortionBackground = 0;
 	int* pDistortionFadeInOut  = 0;
+	int* pPRNGOffset = 0;
+	int* pStartOfPRNG = 0;
+	int* pCurrentPRNG = 0;
+	int* pRemainingPRNGSeeds = 0;
 	CharData* pPlayer1         = 0;
 	CharData* pPlayer2         = 0;
+
 }
 
 void logGameState(const SavedGameState& gameState)
@@ -34,6 +40,10 @@ void logGameState(const SavedGameState& gameState)
 	LOG(2, "\t-cameraZoom: 0x%p - %d\n", pointer_addresses::pCameraZoom, gameState.cameraZoom);
 	LOG(2, "\t-distortionBackground: 0x%p - %d\n", pointer_addresses::pDistortionBackground, gameState.distortionBackground);
 	LOG(2, "\t-distortionFadeInOut: 0x%p - %d\n", pointer_addresses::pDistortionFadeInOut, gameState.distortionFadeInOut);
+	LOG(2, "\t-pPRNGOffset: 0x%p - %d\n", pointer_addresses::pPRNGOffset, pointer_addresses::pPRNGOffset);
+	LOG(2, "\t-pStartOfPRNG: 0x%p - %d\n", pointer_addresses::pStartOfPRNG, gameState.pStartOfPRNG);
+	LOG(2, "\t-pCurrentPRNG: 0x%p - %d\n", pointer_addresses::pCurrentPRNG, gameState.pCurrentPRNG);
+	LOG(2, "\t-pRemainingPRNGSeeds: 0x%p - %d\n", pointer_addresses::pRemainingPRNGSeeds, gameState.pRemainingPRNGSeeds);
 }
 
 void initGameStateAddresses()
@@ -46,6 +56,10 @@ void initGameStateAddresses()
 	pointer_addresses::pCameraZoom           = (int*)(base + pointer_offsets::cameraZoomPtrOffset);
 	pointer_addresses::pDistortionBackground = (int*)(base + pointer_offsets::distortionBackgroundPtrOffset);
 	pointer_addresses::pDistortionFadeInOut  = (int*)(base + pointer_offsets::distortionFadeInOutPtrOffset);
+	pointer_addresses::pPRNGOffset			 = (int*)(base + pointer_offsets::prngOffset);
+	pointer_addresses::pStartOfPRNG			 = (int*)(*pointer_addresses::pPRNGOffset + 0x9CC);
+	pointer_addresses::pCurrentPRNG			 = (int*)(*pointer_addresses::pPRNGOffset + 0x1394);
+	pointer_addresses::pRemainingPRNGSeeds   = (int*)(*pointer_addresses::pPRNGOffset + 0x138C);
 	pointer_addresses::pPlayer1              = g_interfaces.player1.GetData();
 	pointer_addresses::pPlayer2              = g_interfaces.player2.GetData();
 }
@@ -60,7 +74,9 @@ void saveGameState(SavedGameState& gameState)
 	gameState.cameraZoom           = *pointer_addresses::pCameraZoom;
 	gameState.distortionBackground = *pointer_addresses::pDistortionBackground;
 	gameState.distortionFadeInOut  = *pointer_addresses::pDistortionFadeInOut;
-
+	gameState.pStartOfPRNG		   = *pointer_addresses::pStartOfPRNG;
+	gameState.pCurrentPRNG		   = *pointer_addresses::pCurrentPRNG;
+	gameState.pRemainingPRNGSeeds  = *pointer_addresses::pRemainingPRNGSeeds;
 	memcpy(&gameState.player1, pointer_addresses::pPlayer1, ENTITY_SIZE);
 	memcpy(&gameState.player2, pointer_addresses::pPlayer2, ENTITY_SIZE);
 
@@ -80,7 +96,9 @@ void loadGameState(SavedGameState& gameState)
 	*pointer_addresses::pCameraZoom           = gameState.cameraZoom;
 	*pointer_addresses::pDistortionBackground = gameState.distortionBackground;
 	*pointer_addresses::pDistortionFadeInOut  = gameState.distortionFadeInOut;
-
+	*pointer_addresses::pStartOfPRNG		  = gameState.pStartOfPRNG;
+	*pointer_addresses::pCurrentPRNG		  = gameState.pCurrentPRNG;
+	*pointer_addresses::pRemainingPRNGSeeds   = gameState.pRemainingPRNGSeeds;
 	memcpy(pointer_addresses::pPlayer1, &gameState.player1, ENTITY_SIZE);
 	memcpy(pointer_addresses::pPlayer2, &gameState.player2, ENTITY_SIZE);
 
