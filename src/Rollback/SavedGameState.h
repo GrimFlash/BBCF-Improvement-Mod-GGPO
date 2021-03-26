@@ -12,7 +12,9 @@ struct SavedGameState
 	int cameraZoom;
 	int distortionBackground;
 	int distortionFadeInOut;
-
+	int pStartOfPRNG;
+	int pCurrentPRNG;
+	int pRemainingPRNGSeeds;
 	char player1[ENTITY_SIZE];
 	char player2[ENTITY_SIZE];
 };
