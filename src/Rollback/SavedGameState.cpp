@@ -77,6 +77,7 @@ void saveGameState(SavedGameState& gameState)
 	gameState.pStartOfPRNG		   = *pointer_addresses::pStartOfPRNG;
 	gameState.pCurrentPRNG		   = *pointer_addresses::pCurrentPRNG;
 	gameState.pRemainingPRNGSeeds  = *pointer_addresses::pRemainingPRNGSeeds;
+	memcpy(&gameState.PRNGMap, pointer_addresses::pStartOfPRNG, 0x9C0); //Credit to Gneiss for finding the PRNG Addresses
 	memcpy(&gameState.player1, pointer_addresses::pPlayer1, ENTITY_SIZE);
 	memcpy(&gameState.player2, pointer_addresses::pPlayer2, ENTITY_SIZE);
 
@@ -99,6 +100,7 @@ void loadGameState(SavedGameState& gameState)
 	*pointer_addresses::pStartOfPRNG		  = gameState.pStartOfPRNG;
 	*pointer_addresses::pCurrentPRNG		  = gameState.pCurrentPRNG;
 	*pointer_addresses::pRemainingPRNGSeeds   = gameState.pRemainingPRNGSeeds;
+	memcpy(pointer_addresses::pStartOfPRNG, &gameState.PRNGMap, 0x9C0); //Credit to Gneiss for finding the PRNG Addresses
 	memcpy(pointer_addresses::pPlayer1, &gameState.player1, ENTITY_SIZE);
 	memcpy(pointer_addresses::pPlayer2, &gameState.player2, ENTITY_SIZE);
 

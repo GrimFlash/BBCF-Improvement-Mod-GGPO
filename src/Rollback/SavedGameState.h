@@ -15,6 +15,7 @@ struct SavedGameState
 	int pStartOfPRNG;
 	int pCurrentPRNG;
 	int pRemainingPRNGSeeds;
+	char PRNGMap[0x9C0]; //Credit to Gneiss for finding the PRNG Addresses
 	char player1[ENTITY_SIZE];
 	char player2[ENTITY_SIZE];
 };
