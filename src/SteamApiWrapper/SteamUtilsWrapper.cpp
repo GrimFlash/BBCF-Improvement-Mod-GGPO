@@ -1,5 +1,7 @@
-#include "../../include/SteamApiWrapper/SteamUtilsWrapper.h"
-#include "../../include/utils.h"
+#include "SteamUtilsWrapper.h"
+
+#include "Core/logger.h"
+#include "Core/utils.h"
 
 SteamUtilsWrapper::SteamUtilsWrapper(ISteamUtils** pSteamUtils)
 {
@@ -8,7 +10,7 @@ SteamUtilsWrapper::SteamUtilsWrapper(ISteamUtils** pSteamUtils)
 
 	m_SteamUtils = *pSteamUtils;
 	void* thisAddress = this;
-	WriteToMemory((uintptr_t)pSteamUtils, (char*)&thisAddress, 4); //basically *pSteamUtils = this;
+	WriteToProtectedMemory((uintptr_t)pSteamUtils, (char*)&thisAddress, 4); //basically *pSteamUtils = this;
 
 	LOG(7, "\t- after: *pSteamUtils: 0x%p, m_SteamUtils: 0x%p\n", *pSteamUtils, m_SteamUtils);
 }

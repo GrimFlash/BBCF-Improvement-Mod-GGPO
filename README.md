@@ -31,7 +31,6 @@ In the last decade, numerous fighting-game developers have documented
 the negative player effects that lockstep netcode and its necessary input
 latency create. Instead, developers and community members alike have
 espoused the virtues of rollback-based netcode, including
-[Mike "MikeZ" Zaimont of Lab Zero and Skullgirls](https://mikezsez.blogspot.com/2019/11/lets-talk-about-rollbacks.html),
 [Michael Stallone of Netherrealm and Mortal Kombat](https://youtu.be/7jb0FOcImdg),
 and [Adam "Keits" Heart of Iron Galaxy and Killer Instinct](https://www.youtube.com/watch?v=1RI5scXYhK0).
 
@@ -49,8 +48,8 @@ standard- including this project.
 Authors
 
 * @GrimFlash - founder
-* JoeS
 * DaInfamoose
+* JoeS
 
 ## License
 This project is licensed under the MIT License -

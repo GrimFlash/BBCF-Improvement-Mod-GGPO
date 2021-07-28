@@ -1,4 +1,6 @@
-#include "../../include/D3D9ExWrapper/ID3DXWrapper_Effect.h"
+#include "ID3DXWrapper_Effect.h"
+
+#include "Core/logger.h"
 
 ID3DXEffectWrapper::ID3DXEffectWrapper(LPD3DXEFFECT** ppEffect)
 {

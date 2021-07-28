@@ -15,37 +15,67 @@
     <ClCompile Include="depends\imgui\imgui_demo.cpp" />
     <ClCompile Include="depends\imgui\imgui_draw.cpp" />
     <ClCompile Include="depends\imgui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="src\additional_hooks.cpp" />
-    <ClCompile Include="src\bbcf_im.cpp" />
-    <ClCompile Include="src\bbcf_im_networking.cpp" />
-    <ClCompile Include="src\containers.cpp" />
-    <ClCompile Include="src\crashdump.cpp" />
-    <ClCompile Include="src\custom_gamemodes.cpp" />
-    <ClCompile Include="src\custom_palette.cpp" />
+    <ClCompile Include="src\CustomGameMode\customGameMode.cpp" />
+    <ClCompile Include="src\CustomGameMode\GameModeManager.cpp" />
+    <ClCompile Include="src\Game\characters.cpp" />
+    <ClCompile Include="src\Game\stages.cpp" />
+    <ClCompile Include="src\Network\OnlineGameModeManager.cpp" />
+    <ClCompile Include="src\Overlay\NotificationBar\NotificationBar.cpp" />
+    <ClCompile Include="src\Overlay\Widget\ActiveGameModeWidget.cpp" />
+    <ClCompile Include="src\Overlay\Widget\GameModeSelectWidget.cpp" />
+    <ClCompile Include="src\Overlay\Widget\StageSelectWidget.cpp" />
+    <ClCompile Include="src\Overlay\Window\RoomWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\SaveLoadWindow.cpp" />
+    <ClCompile Include="src\Palette\CharPaletteHandle.cpp" />
+    <ClCompile Include="src\Game\gamestates.cpp" />
+    <ClCompile Include="src\Game\Jonb\JonbReader.cpp" />
+    <ClCompile Include="src\Game\MatchState.cpp" />
+    <ClCompile Include="src\Game\Player.cpp" />
+    <ClCompile Include="src\Hooks\hooks_bbcf.cpp" />
+    <ClCompile Include="src\Hooks\hooks_customGameModes.cpp" />
+    <ClCompile Include="src\Hooks\hooks_detours.cpp" />
+    <ClCompile Include="src\Hooks\hooks_palette.cpp" />
+    <ClCompile Include="src\Rollback\SavedGameState.cpp" />
+    <ClCompile Include="src\SteamApiWrapper\steamApiWrappers.cpp" />
+    <ClCompile Include="src\Core\interfaces.cpp" />
+    <ClCompile Include="src\Core\crashdump.cpp" />
+    <ClCompile Include="src\Network\NetworkManager.cpp" />
+    <ClCompile Include="src\Network\OnlinePaletteManager.cpp" />
+    <ClCompile Include="src\Network\RoomManager.cpp" />
+    <ClCompile Include="src\Overlay\fonts.cpp" />
+    <ClCompile Include="src\Overlay\imgui_utils.cpp" />
+    <ClCompile Include="src\Overlay\Logger\ImGuiLogger.cpp" />
+    <ClCompile Include="src\Overlay\WindowContainer\WindowContainer.cpp" />
+    <ClCompile Include="src\Overlay\WindowManager.cpp" />
+    <ClCompile Include="src\Overlay\Window\DebugWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\HitboxOverlay.cpp" />
+    <ClCompile Include="src\Overlay\Window\LogWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\MainWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\PaletteEditorWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\UpdateNotifierWindow.cpp" />
+    <ClCompile Include="src\Overlay\Window\IWindow.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\D3DXMath.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3D9EXWrapper.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3D9EXWrapper_Device.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3D9Wrapper_Sprite.cpp" />
     <ClCompile Include="src\D3D9EXWrapper\ID3DXWrapper_Effect.cpp" />
-    <ClCompile Include="src\Game\game.cpp" />
-    <ClCompile Include="src\hook_manager.cpp" />
-    <ClCompile Include="src\ImGui\ImGuiSystem.cpp" />
-    <ClCompile Include="src\ImGui\fonts.cpp" />
-    <ClCompile Include="src\internal_palette_datas.cpp" />
-    <ClCompile Include="src\logger.cpp" />
-    <ClCompile Include="src\dll_main.cpp" />
-    <ClCompile Include="src\network_manager.cpp" />
-    <ClCompile Include="src\settings.cpp" />
-    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\Hooks\HookManager.cpp" />
+    <ClCompile Include="src\Core\logger.cpp" />
+    <ClCompile Include="src\Core\dllmain.cpp" />
+    <ClCompile Include="src\Core\Settings.cpp" />
+    <ClCompile Include="src\Palette\impl_templates.cpp" />
+    <ClCompile Include="src\Palette\PaletteManager.cpp" />
+    <ClCompile Include="src\Palette\impl_templates.h" />
+    <ClCompile Include="src\SteamApiWrapper\SteamApiHelper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamFriendsWrapper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamMatchmakingWrapper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamNetworkingWrapper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamUserStatsWrapper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamUserWrapper.cpp" />
     <ClCompile Include="src\SteamApiWrapper\SteamUtilsWrapper.cpp" />
-    <ClCompile Include="src\steamapi_helper.cpp" />
-    <ClCompile Include="src\update_check.cpp" />
-    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\Web\update_check.cpp" />
+    <ClCompile Include="src\Core\utils.cpp" />
+    <ClCompile Include="src\Web\url_downloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="depends\imgui\imconfig.h" />
@@ -55,45 +85,83 @@
     <ClInclude Include="depends\imgui\stb_rect_pack.h" />
     <ClInclude Include="depends\imgui\stb_textedit.h" />
     <ClInclude Include="depends\imgui\stb_truetype.h" />
-    <ClInclude Include="include\additional_hooks.h" />
-    <ClInclude Include="include\bbcf_im.h" />
-    <ClInclude Include="include\bbcf_im_networking.h" />
-    <ClInclude Include="include\cchar.h" />
-    <ClInclude Include="include\containers.h" />
-    <ClInclude Include="include\crashdump.h" />
-    <ClInclude Include="include\custom_gamemodes.h" />
-    <ClInclude Include="include\custom_palette.h" />
-    <ClInclude Include="include\D3D9EXWrapper\D3DXMath.h" />
-    <ClInclude Include="include\D3D9EXWrapper\ID3D9EXWrapper.h" />
-    <ClInclude Include="include\D3D9EXWrapper\ID3D9EXWrapper_Device.h" />
-    <ClInclude Include="include\D3D9EXWrapper\ID3D9Wrapper_Sprite.h" />
-    <ClInclude Include="include\D3D9EXWrapper\ID3DXWrapper_Effect.h" />
-    <ClInclude Include="include\hook_manager.h" />
-    <ClInclude Include="include\ImGui\ImGuiSystem.h" />
-    <ClInclude Include="include\ImGui\fonts.h" />
-    <ClInclude Include="include\internal_palette_datas.h" />
-    <ClInclude Include="include\logger.h" />
-    <ClInclude Include="include\network_manager.h" />
-    <ClInclude Include="include\settings.h" />
-    <ClInclude Include="include\gamestates_defines.h" />
-    <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamFriendsWrapper.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamMatchmakingWrapper.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamNetworkingWrapper.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamUserStatsWrapper.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamUserWrapper.h" />
-    <ClInclude Include="include\SteamApiWrapper\SteamUtilsWrapper.h" />
-    <ClInclude Include="include\steamapi_helper.h" />
-    <ClInclude Include="include\update_check.h" />
-    <ClInclude Include="include\utils.h" />
-    <ClInclude Include="src\Game\game.h" />
+    <ClInclude Include="src\Core\info.h" />
+    <ClInclude Include="src\CustomGameMode\customGameMode.h" />
+    <ClInclude Include="src\CustomGameMode\GameModeManager.h" />
+    <ClInclude Include="src\D3D9EXWrapper\d3d9.h" />
+    <ClInclude Include="src\Game\characters.h" />
+    <ClInclude Include="src\Game\stages.h" />
+    <ClInclude Include="src\Network\OnlineGameModeManager.h" />
+    <ClInclude Include="src\Overlay\NotificationBar\NotificationBar.h" />
+    <ClInclude Include="src\Overlay\Widget\ActiveGameModeWidget.h" />
+    <ClInclude Include="src\Overlay\Widget\GameModeSelectWidget.h" />
+    <ClInclude Include="src\Overlay\Widget\StageSelectWidget.h" />
+    <ClInclude Include="src\Overlay\Window\RoomWindow.h" />
+    <ClInclude Include="src\Overlay\Window\SaveLoadWindow.h" />
+    <ClInclude Include="src\Palette\CharPaletteHandle.h" />
+    <ClInclude Include="src\Game\Jonb\JonbEntry.h" />
+    <ClInclude Include="src\Game\Jonb\JonbReader.h" />
+    <ClInclude Include="src\Game\MatchState.h" />
+    <ClInclude Include="src\Game\Player.h" />
+    <ClInclude Include="src\Game\Room\Room.h" />
+    <ClInclude Include="src\Game\Room\RoomMemberEntry.h" />
+    <ClInclude Include="src\Hooks\hooks_bbcf.h" />
+    <ClInclude Include="src\Hooks\hooks_customGameModes.h" />
+    <ClInclude Include="src\Hooks\hooks_detours.h" />
+    <ClInclude Include="src\Hooks\hooks_palette.h" />
+    <ClInclude Include="src\Rollback\SavedGameState.h" />
+    <ClInclude Include="src\SteamApiWrapper\steamApiWrappers.h" />
+    <ClInclude Include="src\Game\CharData.h" />
+    <ClInclude Include="src\Core\interfaces.h" />
+    <ClInclude Include="src\Core\crashdump.h" />
+    <ClInclude Include="src\Network\NetworkManager.h" />
+    <ClInclude Include="src\Network\OnlinePaletteManager.h" />
+    <ClInclude Include="src\Network\Packet.h" />
+    <ClInclude Include="src\Network\RoomManager.h" />
+    <ClInclude Include="src\Overlay\fonts.h" />
+    <ClInclude Include="src\Overlay\imgui_utils.h" />
+    <ClInclude Include="src\Overlay\Logger\ImGuiLogger.h" />
+    <ClInclude Include="src\Overlay\Logger\Logger.h" />
+    <ClInclude Include="src\Overlay\WindowContainer\WindowContainer.h" />
+    <ClInclude Include="src\Overlay\WindowContainer\WindowType.h" />
+    <ClInclude Include="src\Overlay\WindowManager.h" />
+    <ClInclude Include="src\Overlay\Window\DebugWindow.h" />
+    <ClInclude Include="src\Overlay\Window\HitboxOverlay.h" />
+    <ClInclude Include="src\Overlay\Window\LogWindow.h" />
+    <ClInclude Include="src\Overlay\Window\MainWindow.h" />
+    <ClInclude Include="src\Overlay\Window\PaletteEditorWindow.h" />
+    <ClInclude Include="src\Overlay\Window\UpdateNotifierWindow.h" />
+    <ClInclude Include="src\Overlay\Window\IWindow.h" />
+    <ClInclude Include="src\D3D9EXWrapper\D3DXMath.h" />
+    <ClInclude Include="src\D3D9EXWrapper\ID3D9EXWrapper.h" />
+    <ClInclude Include="src\D3D9EXWrapper\ID3D9EXWrapper_Device.h" />
+    <ClInclude Include="src\D3D9EXWrapper\ID3D9Wrapper_Sprite.h" />
+    <ClInclude Include="src\D3D9EXWrapper\ID3DXWrapper_Effect.h" />
+    <ClInclude Include="src\Hooks\HookManager.h" />
+    <ClInclude Include="src\Palette\impl_format.h" />
+    <ClInclude Include="src\Core\logger.h" />
+    <ClInclude Include="src\Core\Settings.h" />
+    <ClInclude Include="src\Game\gamestates.h" />
+    <ClInclude Include="src\Palette\PaletteManager.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamApiHelper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamFriendsWrapper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamMatchmakingWrapper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamNetworkingWrapper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamUserStatsWrapper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamUserWrapper.h" />
+    <ClInclude Include="src\SteamApiWrapper\SteamUtilsWrapper.h" />
+    <ClInclude Include="src\Web\update_check.h" />
+    <ClInclude Include="src\Core\utils.h" />
+    <ClInclude Include="src\Web\url_downloader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="export\dinput8.def" />
+    <None Include="resource\palettes.ini" />
     <None Include="resource\settings.ini">
       <FileType>Document</FileType>
       <DeploymentContent>false</DeploymentContent>
     </None>
+    <None Include="src\Core\settings.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CB50353A-2EC9-4D1C-89C6-65A621C335C5}</ProjectGuid>
@@ -130,7 +198,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>dinput8</TargetName>
-    <IncludePath>$(SolutionDir)\depends\winhttpclient\Include;$(SolutionDir)\depends\imgui;$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Include;$(SolutionDir)\depends\steam_api\public\steam;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\src;$(SolutionDir)\depends\winhttpclient\Include;$(SolutionDir)\depends\imgui;$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Include;$(SolutionDir)\depends\steam_api\public\steam;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Lib\x86;$(SolutionDir)\depends\steam_api\redistributable_bin;$(LibraryPath)</LibraryPath>
     <OutDir>bin\$(Configuration)\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
@@ -138,7 +206,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>dinput8</TargetName>
-    <IncludePath>$(SolutionDir)\depends\imgui;$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Include;$(SolutionDir)\depends\steam_api\public\steam;$(SolutionDir)\depends\winhttpclient\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\src;$(SolutionDir)\depends\imgui;$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Include;$(SolutionDir)\depends\steam_api\public\steam;$(SolutionDir)\depends\winhttpclient\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\depends\detour;$(SolutionDir)\depends\directx_sdk\Lib\x86;$(SolutionDir)\depends\steam_api\redistributable_bin;$(LibraryPath)</LibraryPath>
     <OutDir>bin\$(Configuration)\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
@@ -152,14 +220,15 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;BBCF_IM_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(SolutionDir)depends\GGPO\include</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>export/dinput8.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)depends\GGPO\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -168,22 +237,27 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;BBCF_IM_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)depends\GGPO\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <ModuleDefinitionFile>export/dinput8.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)depends\GGPO\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
       <AdditionalDependencies>comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -192,5 +266,6 @@
   </ImportGroup>
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(ProjectDir)resource\settings.ini" DestinationFolder="$(ProjectDir)$(OutDir)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="false" />
+    <Copy SourceFiles="$(ProjectDir)resource\palettes.ini" DestinationFolder="$(ProjectDir)$(OutDir)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="false" />
   </Target>
 </Project>

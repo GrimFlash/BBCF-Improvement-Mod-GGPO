@@ -1,5 +1,7 @@
-#include "../../include/SteamApiWrapper/SteamFriendsWrapper.h"
-#include "../../include/utils.h"
+#include "SteamFriendsWrapper.h"
+
+#include "Core/logger.h"
+#include "Core/utils.h"
 
 SteamFriendsWrapper::SteamFriendsWrapper(ISteamFriends** pSteamFriends)
 {
@@ -8,7 +10,7 @@ SteamFriendsWrapper::SteamFriendsWrapper(ISteamFriends** pSteamFriends)
 
 	m_SteamFriends = *pSteamFriends;
 	void* thisAddress = this;
-	WriteToMemory((uintptr_t)pSteamFriends, (char*)&thisAddress, 4); //basically *pSteamFriends = this;
+	WriteToProtectedMemory((uintptr_t)pSteamFriends, (char*)&thisAddress, 4); //basically *pSteamFriends = this;
 
 	LOG(7, "\t- after: *pSteamFriends: 0x%p, m_SteamFriends: 0x%p\n", *pSteamFriends, m_SteamFriends);
 }
