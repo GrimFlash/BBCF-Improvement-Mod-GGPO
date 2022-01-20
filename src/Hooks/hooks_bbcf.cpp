@@ -297,22 +297,6 @@ void __declspec(naked)GetPlayerAvatarBaseFunc()
 	}
 }
 
-DWORD CpuUsageFixJmpBackAddr = 0;
-void __declspec(naked)CpuUsageFix()
-{
-	__asm pushad
-	Sleep(1);
-	__asm popad
-
-	__asm
-	{
-		push esi
-		lea eax, [ebp - 8h]
-		push eax
-		jmp[CpuUsageFixJmpBackAddr]
-	}
-}
-
 DWORD GetMatchVariablesJmpBackAddr = 0;
 void __declspec(naked)GetMatchVariables()
 {
@@ -335,7 +319,7 @@ void __declspec(naked)GetMatchVariables()
 	__asm
 	{
 		popad
-		mov dword ptr[ecx + 20Ch], 0
+		mov dword ptr[ecx + 54h], 0
 		jmp[GetMatchVariablesJmpBackAddr]
 	}
 }
@@ -353,7 +337,7 @@ void __declspec(naked)MatchIntroStartsPlayingFunc()
 	__asm
 	{
 		popad
-		and dword ptr[eax + 40626Ch], 0FFFFFFFDh
+		and dword ptr[eax + 2778h], 0FFFFFFFDh
 		jmp[MatchIntroStartsPlayingJmpBackAddr]
 	}
 }
@@ -437,12 +421,12 @@ void __declspec(naked)GetEntityListAddr()
 	__asm mov [g_gameVals.pEntityList], eax
 
 	// Original:
-	// push    648h
-	// mov[esi + 62778h], eax
+	// push    3F0h
+	// mov[esi + 62784h], eax
 	__asm
 	{
 		push[entityListSize]
-		mov[esi + 62778h], eax
+		mov[esi + 62784h], eax
 		jmp[GetEntityListAddrJmpBackAddr]
 	}
 }
@@ -455,7 +439,7 @@ void __declspec(naked)GetEntityListDeleteAddr()
 	_asm
 	{
 		mov[g_gameVals.pEntityList], 0
-		mov[esi + 62778h], edi
+		mov[esi + 62784h], ecx
 		jmp[GetEntityListDeleteAddrJmpBackAddr]
 	}
 }
@@ -467,9 +451,9 @@ void __declspec(naked)GetIsHUDHidden()
 
 	__asm
 	{
-		or dword ptr[eax + 40626Ch], 4
+		or dword ptr[eax + 2778h], 4
 		push eax
-		add eax, 40626Ch
+		add eax, 2778h 
 		mov g_gameVals.pIsHUDHidden, eax
 		pop eax
 		jmp[GetIsHUDHiddenJmpBackAddr]
@@ -647,12 +631,6 @@ bool placeHooks_bbcf()
 {
 	LOG(2, "placeHooks_bbcf\n");
 
-	if (Settings::settingsIni.cpuusagefix)
-	{
-		CpuUsageFixJmpBackAddr = HookManager::SetHook("CpuBottleneckFix_new", "\x56\x8d\x45\xf8\x50\x8b\xf1",
-			"xxxxxxx", 5, CpuUsageFix);
-	}
-
 	GetGameStateTitleScreenJmpBackAddr = HookManager::SetHook("GetGameStateTitleScreen", "\xc7\x87\x0c\x01\x00\x00\x04\x00\x00\x00\x83\xc4\x1c",
 		"xxxxxxxxxxxxx", 10, GetGameStateTitleScreen);
 	
@@ -683,11 +661,11 @@ bool placeHooks_bbcf()
 	GetPlayerAvatarBaseAddr = HookManager::SetHook("GetPlayerAvatarBaseFunc", "\x89\x83\xca\x00\x00\x00\xe8",
 		"xxxxxxx", 6, GetPlayerAvatarBaseFunc);
 	
-	GetMatchVariablesJmpBackAddr = HookManager::SetHook("GetMatchVariables", "\xc7\x81\x0c\x02\x00\x00\x00\x00\x00\x00\x8b\xce",
-		"xxxxxxxxxxxx", 10, GetMatchVariables);
+	GetMatchVariablesJmpBackAddr = HookManager::SetHook("GetMatchVariables", "\xC7\x41\x54\x00\x00\x00\x00\x8B\xCE",
+		"xxx????xx", 7, GetMatchVariables); 
 
-	MatchIntroStartsPlayingJmpBackAddr = HookManager::SetHook("MatchIntroStartsPlaying", "\x83\xa0\x6c\x62\x40\x00\xfd\x83\x66\x24\xef\x5f\x5e\x33\xc0",
-		"xxxxxxxxxxxxxxx", 7, MatchIntroStartsPlayingFunc);
+	MatchIntroStartsPlayingJmpBackAddr = HookManager::SetHook("MatchIntroStartsPlaying", "\x83\xA0\x78\x27\x00\x00\x00\x83\x66\x30",
+		"xxxxxx?xxx", 7, MatchIntroStartsPlayingFunc);
 	
 	GetStageSelectAddrJmpBackAddr = HookManager::SetHook("GetStageSelectAddr", "\xc7\x81\x54\x0f\x00\x00\x00\x00\x00\x00\x8d\x41\x0c",
 		"xxxxxxxxxxxxx", 10, GetStageSelectAddr);
@@ -698,16 +676,16 @@ bool placeHooks_bbcf()
 	OverwriteStagesListJmpBackAddr = HookManager::SetHook("OverwriteStagesList", "\x8b\x75\xfc\x8d\x45\xf8",
 		"xxxxxx", 6, OverwriteStagesList);
 
-	GetEntityListAddrJmpBackAddr = HookManager::SetHook("GetEntityListAddr", "\x68\x00\x00\x00\x00\x89\x86\x78\x27\x06\x00",
-		"x????xxxxxx", 11, GetEntityListAddr);
+	GetEntityListAddrJmpBackAddr = HookManager::SetHook("GetEntityListAddr", "\x68\x00\x00\x00\x00\x89\x86\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x68",
+		"x????xx????x????x", 11, GetEntityListAddr);
 	entityListSize = HookManager::GetOriginalBytes("GetEntityListAddr", 1, 4);
 	g_gameVals.entityCount = entityListSize / 4;
 
-	GetEntityListDeleteAddrJmpBackAddr = HookManager::SetHook("GetEntityListDeleteAddr", "\x89\xbe\x78\x27\x06\x00\x89\xbe\x7c\x27\x06\x00",
-		"xxxxxx", 6, GetEntityListDeleteAddr);
+	GetEntityListDeleteAddrJmpBackAddr = HookManager::SetHook("GetEntityListDeleteAddr", "\x89\x8E\x00\x00\x00\x00\x89\x8E\x00\x00\x00\x00\x89\x8E\x00\x00\x00\x00\x89\x8E\x00\x00\x00\x00\x89\x86",
+		"xx????xx????xx????xx????xx", 6, GetEntityListDeleteAddr);
 
-	GetIsHUDHiddenJmpBackAddr = HookManager::SetHook("GetIsHUDHidden", "\x83\x88\x6c\x62\x40\x00\x04",
-		"xxxxxxx", 7, GetIsHUDHidden);
+	GetIsHUDHiddenJmpBackAddr = HookManager::SetHook("GetIsHUDHidden", "\x83\x88\x78\x27\x00\x00\x00\x8B\x07\x8B\xCF\xFF\x50\x00\xB9\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5F\xB8\x00\x00\x00\x00\x5B\xC3\x8B\x07\x8B\xCF\xFF\x50\x00\xB9\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5F\xB8\x00\x00\x00\x00\x5B\xC3\x8B\x07",
+		"xxxxxx?xxxxxx?x????x????xx????xxxxxxxx?x????x????xx????xxxx", 7, GetIsHUDHidden);
 
 	GetViewAndProjMatrixesJmpBackAddr = HookManager::SetHook("GetViewAndProjMatrixes", "\xf3\x0f\x11\x45\xe0\xc7\x45\xe4\x00\x00\x80\x3f",
 		"xxxxxxxxxxxx", 12, GetViewAndProjMatrixes);
@@ -723,8 +701,8 @@ bool placeHooks_bbcf()
 	GetRoomOneJmpBackAddr = HookManager::SetHook("GetRoomOne", "\x0f\xb7\x06\x50\x8b\xcb",
 		"xxxxxx", 6, GetRoomOne);
 	
-	GetRoomTwoJmpBackAddr = HookManager::SetHook("GetRoomTwo", "\xc7\x87\xf0\x2c\x02\x00\x02\x00\x00\x00\x5f",
-		"xxxxxxxxxxx", 11, GetRoomTwo);
+	GetRoomTwoJmpBackAddr = HookManager::SetHook("GetRoomTwo", "\xC7\x87\x10\x2D\x02\x00",
+		"xxxxxx", 11, GetRoomTwo);
 
 	GetFFAMatchThisPlayerIndexJmpBackAddr = HookManager::SetHook("GetFFAMatchThisPlayerIndex", "\xc7\x83\x04\x07\x00\x00\x00\x00\x00\x00\xc7\x83\xd8\x06\x00\x00\x00\x00\x00\x00",
 		"xxxxxxxxxxxxxxxxxxxx", 10, GetFFAMatchThisPlayerIndex);
